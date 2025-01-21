@@ -12,6 +12,6 @@
   "dependencies": {
     "@polymarket/clob-client": "4.14.0",
     "ether": "0.0.9",
-    "ts-brand": "^0.2.0"
+    "ts-brand": "0.2.0"
   }
 }
