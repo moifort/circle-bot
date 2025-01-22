@@ -28,7 +28,7 @@ jobs:
       - run: bun install --cwd back
       - run: bun test --cwd back --coverage
       - name: ✅ Code coverage comment
-        uses: romeovs/lcov-reporter-action@v0.4.0
+        uses: kefasjw/lcov-pull-request-report@v1
         with:
           lcov-file: back/coverage/lcov.info
           github-token: ${{ secrets.GITHUB_TOKEN }}
