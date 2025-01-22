@@ -9,5 +9,4 @@ test('findLatestPoliticalBet', async () => {
   // Then
   expect(bets).toHaveLength(20)
   expect(bets[0]).toContainAllKeys(['id', 'title', 'description', 'endAt', 'updatedAt', 'yes', 'no'])
-  console.log(bets)
 })
