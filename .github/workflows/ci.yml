@@ -22,7 +22,7 @@ jobs:
       - name: 🤌 Install bun
         uses: oven-sh/setup-bun@v2
       - run: bun install --cwd back
-      - run: bun --cwd back test:unit --coverage
+      - run: bun --cwd back test:unit
 
   test-int:
     name: 🏭 Test integration
