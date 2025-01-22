@@ -1,0 +1,4 @@
+[test]
+coverageSkipTestFiles = true
+coverageIgnoreSourcemaps = true
+coverageReporter = ["lcov", "text"]
