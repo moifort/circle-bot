@@ -7,5 +7,4 @@ it('getLatestPoliticalBets', async () => {
 
   // Then
   expect(bets).toBeArray()
-  console.log(bets)
 })
