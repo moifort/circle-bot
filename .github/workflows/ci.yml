@@ -18,7 +18,7 @@ jobs:
       - run: bun install --cwd back
       - run: bun --cwd back biome ci
 
-  test-unit:
+  test:
     name: 🏭 Test
     runs-on: ubuntu-latest
     steps:
