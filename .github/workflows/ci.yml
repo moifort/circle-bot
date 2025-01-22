@@ -37,8 +37,10 @@ jobs:
         uses: oven-sh/setup-bun@v2
       - run: bun install --cwd back
       - run: bun --cwd back test int --coverage
-      - uses: romeovs/lcov-reporter-action@v0.4.0
+      - uses: kefasjw/lcov-pull-request-report@v1
         with:
           lcov-file: back/coverage/lcov.info
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          all-files-minimum-coverage: 95
+          changed-files-minimum-coverage: 95
 
