@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'bun:test'
 import { BetDescription, BetTitle } from './index.validator'
 
-describe('BetId', () => {
-  it('should throw if the value empty', () => {
-    expect(() => BetTitle('')).toThrow('Non empty value')
-  })
-
-  it('should not throw for a valid BetId', () => {
-    const id = '14178'
-    expect(() => BetTitle(id)).not.toThrow()
-  })
-})
+// describe('BetId', () => {
+//   it('should throw if the value empty', () => {
+//     expect(() => BetId('')).toThrow('Non empty value')
+//   })
+//
+//   it('should not throw for a valid BetId', () => {
+//     const id = '14178'
+//     expect(() => BetId(id)).not.toThrow()
+//   })
+// })
 
 describe('BetTitle', () => {
   it('should throw if the value empty', () => {

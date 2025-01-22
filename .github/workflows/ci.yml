@@ -22,7 +22,12 @@ jobs:
       - name: 🤌 Install bun
         uses: oven-sh/setup-bun@v2
       - run: bun install --cwd back
-      - run: bun --cwd back test:unit
+      - run: bun --cwd back test:unit --coverage
+      - name: 📦 Archive coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-unit
+          path: back/coverage/lcov.info
 
   test-int:
     name: 🏭 Test integration
@@ -32,5 +37,10 @@ jobs:
       - name: 🤌 Install bun
         uses: oven-sh/setup-bun@v2
       - run: bun install --cwd back
-      - run: bun --cwd back test:int
+      - run: bun --cwd back test:int --coverage
+      - name: 📦 Archive coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-int
+          path: back/coverage/lcov.info
 
