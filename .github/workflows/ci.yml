@@ -1,0 +1,36 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+
+jobs:
+  lint:
+    name: 👮 Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 🤌 Install bun
+        uses: oven-sh/setup-bun@v2
+      - run: bun install --cwd back
+      - run: bun --cwd back biome ci
+
+  test-unit:
+    name: 🏭 Test unitaire
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 🤌 Install bun
+        uses: oven-sh/setup-bun@v2
+      - run: bun install --cwd back
+      - run: bun --cwd back test:unit
+
+  test-int:
+    name: 🏭 Test integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 🤌 Install bun
+        uses: oven-sh/setup-bun@v2
+      - run: bun install --cwd back
+      - run: bun --cwd back test:int
+
