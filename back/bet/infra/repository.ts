@@ -10,6 +10,7 @@ export const findLatestPoliticalBet = async (limit: Limit) => {
   const { data }: PolymarketResponse = await response.json()
   return data
     .flatMap(({ markets }) => markets)
+    .filter(({ active }) => active)
     .map<Bet>(({ id, question, description, endDate }) => ({
       id: BetId(id),
       title: BetTitle(question),
