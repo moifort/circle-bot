@@ -33,8 +33,7 @@ jobs:
         uses: oven-sh/setup-bun@v2
       - run: bun install --cwd back
       - run: bun --cwd back test:int --coverage
-      - uses: romeovs/lcov-reporter-action@v0.2.16
+      - uses: romeovs/lcov-reporter-action@v0.4.0
         with:
-          lcov-file: back/coverage/lcov.info
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          lcov-file: ./back/coverage/lcov.info
 
