@@ -1,8 +1,8 @@
 import type { Limit } from '../../utils/index.type.ts'
-import { Percentage } from '../../utils/index.validator.ts'
 import type { Bet } from '../index.type.ts'
 import { BetDescription, BetId, BetTitle } from '../index.validator.ts'
 import type { PolymarketResponse } from './repository.type.ts'
+import { PolymarketPrice } from './repository.validator.ts'
 
 export const findLatestPoliticalBet = async (limit: Limit) => {
   const response = await fetch(
@@ -20,7 +20,7 @@ export const findLatestPoliticalBet = async (limit: Limit) => {
       description: BetDescription(description),
       endAt: new Date(endDate),
       updatedAt: new Date(updatedAt),
-      yes: Percentage(JSON.parse(outcomePrices)[0]),
-      no: Percentage(JSON.parse(outcomePrices)[1]),
+      yes: PolymarketPrice(JSON.parse(outcomePrices)[0]),
+      no: PolymarketPrice(JSON.parse(outcomePrices)[1]),
     }))
 }

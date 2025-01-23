@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { BetDescription, BetId, BetTitle } from './index.validator'
+import { BetDescription, BetId, BetOutcome, BetTitle } from './index.validator'
 
 describe('BetId', () => {
   it('should throw if the value empty', () => {
@@ -31,5 +31,17 @@ describe('BetDescription', () => {
   it('should not throw for a valid BetDescription', () => {
     const validValue = "This is a market on predictions for the Federal Reserve's interest rates in January 2025. "
     expect(() => BetDescription(validValue)).not.toThrow()
+  })
+})
+
+describe('BetOutcome', () => {
+  it('should throw if the value is not a valid outcome', () => {
+    expect(() => BetOutcome('')).toThrow("BetOutcome must be one of: yes, no. Received: ''")
+    expect(() => BetOutcome('lose')).toThrow("BetOutcome must be one of: yes, no. Received: 'lose'")
+  })
+
+  it('should not throw for a valid BetOutcome', () => {
+    expect(() => BetOutcome('yes')).not.toThrow()
+    expect(() => BetOutcome('no')).not.toThrow()
   })
 })

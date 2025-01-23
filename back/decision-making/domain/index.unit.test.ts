@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { PolymarketPrice } from '../../bet/index.validator.ts'
+import { PolymarketPrice } from '../../bet/infra/repository.validator.ts'
 import { Amount, Percentage } from '../../utils/index.validator.ts'
 import { decide } from './index.ts'
 
