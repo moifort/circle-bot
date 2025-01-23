@@ -1,10 +1,9 @@
 import { describe, it } from 'bun:test'
 import { Bot } from './query.ts'
 
-// biome-ignore lint/suspicious/noFocusedTests: <explanation>
-describe.only('Run', () => {
+describe('Run', () => {
   it('should place bet', async () => {
-    // // Given
+    // Given
     // const spy = spyOn(Bet, 'getLatestPolitical')
     // spy.mockResolvedValue([
     //   {

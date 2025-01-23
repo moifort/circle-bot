@@ -5,7 +5,7 @@ import type { Amount as AmountType } from '../utils/index.type.ts'
 import { Amount, Percentage } from '../utils/index.validator.ts'
 import { decide } from './domain'
 
-export namespace DecisionMaking {
+export namespace Evaluator {
   export const evaluate = (yes: PolymarketPrice, no: PolymarketPrice, totalCapital: AmountType) => {
     if (totalCapital < 15) return 'do-nothing'
     const yesEstimation = Percentage(_.clamp(yes + 0.05, 0, 1))

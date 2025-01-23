@@ -2,7 +2,7 @@ import { describe, expect, it } from 'bun:test'
 import { BetOutcome } from '../market/index.validator.ts'
 import { PolymarketPrice } from '../market/infra/repository.validator.ts'
 import { Amount } from '../utils/index.validator.ts'
-import { DecisionMaking } from './query.ts'
+import { Evaluator } from './query.ts'
 
 describe('Evaluate', () => {
   it('should return outcome YES and place the bet', async () => {
@@ -12,7 +12,7 @@ describe('Evaluate', () => {
     const totalCapital = Amount(1000)
 
     // When
-    const bet = DecisionMaking.evaluate(yes, no, totalCapital)
+    const bet = Evaluator.evaluate(yes, no, totalCapital)
 
     // Then
     expect(bet).toEqual({
@@ -29,7 +29,7 @@ describe('Evaluate', () => {
     const totalCapital = Amount(1000)
 
     // When
-    const bet = DecisionMaking.evaluate(yes, no, totalCapital)
+    const bet = Evaluator.evaluate(yes, no, totalCapital)
 
     // Then
     expect(bet).toEqual({
