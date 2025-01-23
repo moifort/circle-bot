@@ -27,6 +27,7 @@
     "ether": "0.0.9",
     "lodash": "4.17.21",
     "ts-brand": "0.2.0",
-    "ts-pattern": "5.6.2"
+    "ts-pattern": "5.6.2",
+    "uuid": "11.0.5"
   }
 }

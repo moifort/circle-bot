@@ -11,8 +11,8 @@ describe('Limit', () => {
     expect(() => Limit(-1)).toThrow('Limit must be a positive integer')
   })
 
-  it('should throw if the value exceeds 100', () => {
-    expect(() => Limit(101)).toThrow('Limit must not exceed 100')
+  it('should throw if the value exceeds 1000', () => {
+    expect(() => Limit(1001)).toThrow('Limit must not exceed 1000')
   })
 
   it('should not throw for a valid limit', () => {

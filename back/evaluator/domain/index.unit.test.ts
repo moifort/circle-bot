@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { PolymarketPrice } from '../../bet/infra/repository.validator.ts'
+import { PolymarketPrice } from '../../market/infra/repository.validator.ts'
 import { Amount, Percentage } from '../../utils/index.validator.ts'
 import { decide } from './index.ts'
 
@@ -22,6 +22,6 @@ describe('Decision making', () => {
     const decision = decide(Percentage(0.1), PolymarketPrice(0.6), totalCapital)
 
     // Then
-    expect(decision).toEqual('no-bet-to-take')
+    expect(decision).toEqual('do-nothing')
   })
 })
