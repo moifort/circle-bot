@@ -1,29 +1,31 @@
-import { BetOutcome } from '../bet/index.validator.ts'
-import type { PolymarketPrice } from '../bet/infra/repository.type.ts'
+import _ from 'lodash'
+import { BetOutcome } from '../market/index.validator.ts'
+import type { PolymarketPrice } from '../market/infra/repository.type.ts'
 import type { Amount as AmountType } from '../utils/index.type.ts'
-import { Percentage } from '../utils/index.validator.ts'
+import { Amount, Percentage } from '../utils/index.validator.ts'
 import { decide } from './domain'
 
 export namespace DecisionMaking {
   export const evaluate = (yes: PolymarketPrice, no: PolymarketPrice, totalCapital: AmountType) => {
-    const yesEstimation = Percentage(yes + 0.05)
-    const noEstimation = Percentage(no + 0.05)
+    if (totalCapital < 15) return 'do-nothing'
+    const yesEstimation = Percentage(_.clamp(yes + 0.05, 0, 1))
+    const noEstimation = Percentage(_.clamp(no + 0.05, 0, 1))
 
     if (yesEstimation > noEstimation) {
-      const betToTake = decide(yesEstimation, yes, totalCapital)
-      if (betToTake === 'no-bet-to-take') return 'no-bet-to-take'
+      const action = decide(yesEstimation, yes, totalCapital)
+      if (action === 'do-nothing') return 'do-nothing'
       return {
         outcome: BetOutcome('yes'),
-        amountToBet: betToTake.amountToBet,
-        expectedGain: betToTake.expectedGain,
+        amountToBet: Amount(_.round(action.amountToBet, -1)),
+        expectedGain: Amount(_.round(action.expectedGain, -1)),
       }
     }
-    const betToTake = decide(noEstimation, no, totalCapital)
-    if (betToTake === 'no-bet-to-take') return 'no-bet-to-take'
+    const action = decide(noEstimation, no, totalCapital)
+    if (action === 'do-nothing') return 'do-nothing'
     return {
       outcome: BetOutcome('no'),
-      amountToBet: betToTake.amountToBet,
-      expectedGain: betToTake.expectedGain,
+      amountToBet: Amount(_.round(action.amountToBet, -1)),
+      expectedGain: Amount(_.round(action.expectedGain, -1)),
     }
   }
 }

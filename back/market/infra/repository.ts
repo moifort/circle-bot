@@ -20,7 +20,7 @@ export const findLatestPoliticalBet = async (limit: Limit) => {
       description: BetDescription(description),
       endAt: new Date(endDate),
       updatedAt: new Date(updatedAt),
-      yes: PolymarketPrice(JSON.parse(outcomePrices)[0]),
-      no: PolymarketPrice(JSON.parse(outcomePrices)[1]),
+      yes: PolymarketPrice(Number.parseFloat(JSON.parse(outcomePrices)[0])),
+      no: PolymarketPrice(Number.parseFloat(JSON.parse(outcomePrices)[1])),
     }))
 }
