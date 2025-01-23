@@ -1,4 +1,5 @@
 import { make } from 'ts-brand'
+import { Percentage } from '../utils/index.validator.ts'
 import type {
   BetDescription as BetDescriptionType,
   BetId as BetIdType,
@@ -22,3 +23,5 @@ export const BetDescription = make<BetDescriptionType>((value) => {
     throw new Error('Non empty value')
   }
 })
+
+export const PolymarketPrice = Percentage

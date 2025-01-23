@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { Limit, Percentage } from './index.validator'
+import { Amount, Limit, Percentage } from './index.validator'
 
 describe('Limit', () => {
   it('should throw if the value is not an integer', () => {
@@ -33,5 +33,17 @@ describe('Percentage', () => {
     expect(() => Percentage(0)).not.toThrow()
     expect(() => Percentage(0.5)).not.toThrow()
     expect(() => Percentage(1)).not.toThrow()
+  })
+})
+
+describe('Amount', () => {
+  it('should throw if the value is less than or equal to 0', () => {
+    expect(() => Amount(0)).toThrow('Amount must be a positive number')
+    expect(() => Amount(-1)).toThrow('Amount must be a positive number')
+  })
+
+  it('should not throw for a valid amount', () => {
+    expect(() => Amount(1)).not.toThrow()
+    expect(() => Amount(100)).not.toThrow()
   })
 })
