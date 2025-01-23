@@ -1,8 +1,9 @@
 import { make } from 'ts-brand'
-import { Percentage } from '../utils/index.validator.ts'
+import { match } from 'ts-pattern'
 import type {
   BetDescription as BetDescriptionType,
   BetId as BetIdType,
+  BetOutcome as BetOutcomeType,
   BetTitle as BetTitleType,
 } from './index.type.ts'
 
@@ -24,4 +25,10 @@ export const BetDescription = make<BetDescriptionType>((value) => {
   }
 })
 
-export const PolymarketPrice = Percentage
+export const BetOutcome = (value: string) =>
+  match(value)
+    .with('yes', () => 'yes' as BetOutcomeType)
+    .with('no', () => 'no' as BetOutcomeType)
+    .otherwise(() => {
+      throw new Error(`BetOutcome must be one of: yes, no. Received: '${value}'`)
+    })

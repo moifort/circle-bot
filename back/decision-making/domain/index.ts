@@ -1,5 +1,5 @@
 import * as _ from 'lodash'
-import type { PolymarketPrice } from '../../bet/index.type.ts'
+import type { PolymarketPrice } from '../../bet/infra/repository.type.ts'
 import type { Amount as AmountType, Percentage as PercentageType } from '../../utils/index.type.ts'
 import { Amount } from '../../utils/index.validator.ts'
 
