@@ -6,7 +6,7 @@ export namespace Market {
   export const latestPoliticalBets = async () => {
     const bets = await findLatestPoliticalBet(Limit(200))
     return bets
-      .filter(({ yes, no }) => yes > 0.15 && no > 0.15)
+      .filter(({ yes, no }) => yes > 0.15 || no > 0.15)
       .filter(({ endAt }) => dayjs(endAt).isBefore(dayjs().add(14, 'day')))
   }
 }

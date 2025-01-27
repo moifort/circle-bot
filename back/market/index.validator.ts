@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { make } from 'ts-brand'
 import { match } from 'ts-pattern'
 import type {
@@ -8,19 +9,28 @@ import type {
 } from './index.type.ts'
 
 export const BetId = make<BetIdType>((value) => {
-  if (!value) {
+  if (!_.isString(value)) {
+    throw new Error(`value must be a string: Received: ${value}`)
+  }
+  if (_.isEmpty(value)) {
     throw new Error('Non empty value')
   }
 })
 
 export const BetTitle = make<BetTitleType>((value) => {
-  if (!value) {
+  if (!_.isString(value)) {
+    throw new Error(`value must be a string: Received: ${value}`)
+  }
+  if (_.isEmpty(value)) {
     throw new Error('Non empty value')
   }
 })
 
 export const BetDescription = make<BetDescriptionType>((value) => {
-  if (!value) {
+  if (!_.isString(value)) {
+    throw new Error(`value must be a string: Received: ${value}`)
+  }
+  if (_.isEmpty(value)) {
     throw new Error('Non empty value')
   }
 })

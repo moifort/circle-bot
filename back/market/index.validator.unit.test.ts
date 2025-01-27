@@ -7,8 +7,7 @@ describe('BetId', () => {
   })
 
   it('should not throw for a valid BetId', () => {
-    const id = '14178'
-    expect(() => BetId(id)).not.toThrow()
+    expect(() => BetId('14178')).not.toThrow()
   })
 })
 
@@ -18,8 +17,7 @@ describe('BetTitle', () => {
   })
 
   it('should not throw for a valid BetTitle', () => {
-    const validValue = 'Trump cryptocurrency executive order in first week?'
-    expect(() => BetTitle(validValue)).not.toThrow()
+    expect(() => BetTitle('Trump cryptocurrency executive order in first week?')).not.toThrow()
   })
 })
 
@@ -29,8 +27,9 @@ describe('BetDescription', () => {
   })
 
   it('should not throw for a valid BetDescription', () => {
-    const validValue = "This is a market on predictions for the Federal Reserve's interest rates in January 2025. "
-    expect(() => BetDescription(validValue)).not.toThrow()
+    expect(() =>
+      BetDescription("This is a market on predictions for the Federal Reserve's interest rates in January 2025. "),
+    ).not.toThrow()
   })
 })
 
