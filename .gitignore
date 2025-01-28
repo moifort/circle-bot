@@ -9,7 +9,7 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
-
+*.log
 # Caches
 
 .cache
@@ -144,6 +144,8 @@ dist
 # DynamoDB Local files
 
 .dynamodb/
+lib/
+
 
 # TernJS port file
 
@@ -165,3 +167,5 @@ dist
 .DS_Store
 
 .git-crypt-key
+
+*.local
