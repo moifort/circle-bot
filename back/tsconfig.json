@@ -6,6 +6,8 @@
     "moduleDetection": "force",
     "jsx": "react-jsx",
     "allowJs": true,
+    "noImplicitAny": true,
+    "erasableSyntaxOnly": true,
 
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,

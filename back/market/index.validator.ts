@@ -1,5 +1,5 @@
 import { make } from 'ts-brand'
-import { match } from 'ts-pattern'
+import { z } from 'zod'
 import type {
   BetDescription as BetDescriptionType,
   BetId as BetIdType,
@@ -7,28 +7,7 @@ import type {
   BetTitle as BetTitleType,
 } from './index.type.ts'
 
-export const BetId = make<BetIdType>((value) => {
-  if (!value) {
-    throw new Error('Non empty value')
-  }
-})
-
-export const BetTitle = make<BetTitleType>((value) => {
-  if (!value) {
-    throw new Error('Non empty value')
-  }
-})
-
-export const BetDescription = make<BetDescriptionType>((value) => {
-  if (!value) {
-    throw new Error('Non empty value')
-  }
-})
-
-export const BetOutcome = (value: string) =>
-  match(value)
-    .with('yes', () => 'yes' as BetOutcomeType)
-    .with('no', () => 'no' as BetOutcomeType)
-    .otherwise(() => {
-      throw new Error(`BetOutcome must be one of: yes, no. Received: '${value}'`)
-    })
+export const BetId = make<BetIdType>((value) => z.string().nonempty().parse(value))
+export const BetTitle = make<BetTitleType>((value) => z.string().nonempty().parse(value))
+export const BetDescription = make<BetDescriptionType>((value) => z.string().nonempty().parse(value))
+export const BetOutcome = (value: string) => z.union([z.literal('yes'), z.literal('no')]).parse(value) as BetOutcomeType

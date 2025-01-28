@@ -3,12 +3,10 @@ import { PolymarketPrice } from '../../market/infra/repository.validator.ts'
 import { Amount, Percentage } from '../../utils/index.validator.ts'
 import { decide } from './index.ts'
 
-describe('Decision making', () => {
-  const totalCapital = Amount(1000)
-
+describe('Evaluator', () => {
   it('should take the bet if odds are good', () => {
     // When
-    const decision = decide(Percentage(0.9), PolymarketPrice(0.6), totalCapital)
+    const decision = decide(Percentage(0.9), PolymarketPrice(0.6), Amount(1000))
 
     // Then
     expect(decision).toEqual({
@@ -19,7 +17,15 @@ describe('Decision making', () => {
 
   it('should not take the bet if odds are bad', () => {
     // When
-    const decision = decide(Percentage(0.1), PolymarketPrice(0.6), totalCapital)
+    const decision = decide(Percentage(0.1), PolymarketPrice(0.6), Amount(1000))
+
+    // Then
+    expect(decision).toEqual('do-nothing')
+  })
+
+  it('should not take the bet if amount are very low', () => {
+    // When
+    const decision = decide(Percentage(0.9), PolymarketPrice(0.6), Amount(1))
 
     // Then
     expect(decision).toEqual('do-nothing')

@@ -17,7 +17,7 @@ describe('Evaluate', () => {
     // Then
     expect(bet).toEqual({
       outcome: BetOutcome('yes'),
-      amountToBet: Amount(130),
+      amountToBet: Amount(120),
       expectedGain: Amount(50),
     })
   })
@@ -34,7 +34,7 @@ describe('Evaluate', () => {
     // Then
     expect(bet).toEqual({
       outcome: BetOutcome('no'),
-      amountToBet: Amount(230),
+      amountToBet: Amount(220),
       expectedGain: Amount(50),
     })
   })

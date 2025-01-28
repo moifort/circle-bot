@@ -1,11 +1,5 @@
 import { make } from 'ts-brand'
+import { z } from 'zod'
 import type { PolymarketPrice as PolymarketPriceType } from './repository.type.ts'
 
-export const PolymarketPrice = make<PolymarketPriceType>((value) => {
-  if (value < 0) {
-    throw new Error(`Percentage must be a non-negative integer: actual ${value}. Value accepted: 0-1`)
-  }
-  if (value > 1) {
-    throw new Error(`Percentage must not exceed 1: actual ${value}. Value accepted: 0-1`)
-  }
-})
+export const PolymarketPrice = make<PolymarketPriceType>((value) => z.number().min(0).max(1).parse(value))
