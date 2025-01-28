@@ -21,7 +21,7 @@ jobs:
       - run: bun --cwd back biome ci
 
   test-unit:
-    name: 🏭 Test
+    name: 🐇 Test Unit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,7 +33,7 @@ jobs:
       - run: bun --cwd back test:unit
 
   test-int:
-    name: 🏭 Test
+    name: 🐢 Test Integration
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -46,7 +46,7 @@ jobs:
 
 
   test-feat:
-    name: 🏭 Test
+    name: 🐌 Test Feature
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
