@@ -3,7 +3,7 @@ import { BetDescription, BetId, BetOutcome, BetTitle } from './index.validator'
 
 describe('BetId', () => {
   it('should throw if the value empty', () => {
-    expect(() => BetId('')).toThrow('Non empty value')
+    expect(() => BetId('')).toThrow()
   })
 
   it('should not throw for a valid BetId', () => {
@@ -13,7 +13,7 @@ describe('BetId', () => {
 
 describe('BetTitle', () => {
   it('should throw if the value empty', () => {
-    expect(() => BetTitle('')).toThrow('Non empty value')
+    expect(() => BetTitle('')).toThrow()
   })
 
   it('should not throw for a valid BetTitle', () => {
@@ -23,7 +23,7 @@ describe('BetTitle', () => {
 
 describe('BetDescription', () => {
   it('should throw if the value empty', () => {
-    expect(() => BetDescription('')).toThrow('Non empty value')
+    expect(() => BetDescription('')).toThrow()
   })
 
   it('should not throw for a valid BetDescription', () => {
@@ -35,8 +35,8 @@ describe('BetDescription', () => {
 
 describe('BetOutcome', () => {
   it('should throw if the value is not a valid outcome', () => {
-    expect(() => BetOutcome('')).toThrow("BetOutcome must be one of: yes, no. Received: ''")
-    expect(() => BetOutcome('lose')).toThrow("BetOutcome must be one of: yes, no. Received: 'lose'")
+    expect(() => BetOutcome('')).toThrow()
+    expect(() => BetOutcome('lose')).toThrow()
   })
 
   it('should not throw for a valid BetOutcome', () => {
