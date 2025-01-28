@@ -2,3 +2,4 @@
 coverageSkipTestFiles = true
 coverageIgnoreSourcemaps = true
 coverageReporter = ["lcov", "text"]
+root = "./src"

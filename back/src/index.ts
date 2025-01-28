@@ -1,0 +1,8 @@
+import 'source-map-support/register'
+import { initializeApp } from 'firebase-admin/app'
+import { getFirestore } from 'firebase-admin/firestore'
+
+const app = initializeApp()
+export const $firestore = getFirestore(app)
+
+export * from './bot'
