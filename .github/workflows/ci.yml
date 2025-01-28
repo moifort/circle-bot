@@ -20,7 +20,7 @@ jobs:
       - run: bun install --cwd back
       - run: bun --cwd back biome ci
 
-  test:
+  test-unit:
     name: 🏭 Test
     runs-on: ubuntu-latest
     steps:
@@ -29,13 +29,31 @@ jobs:
         uses: oven-sh/setup-bun@v2
         with:
           bun-version-file: 'package.json'
-      - run: bun install --cwd back
-      - run: bun test --cwd back --coverage
-      - name: ✅ Code coverage comment
-        uses: romeovs/lcov-reporter-action@v0.4.0
+      - run: bun --cwd back install
+      - run: bun --cwd back test:unit
+
+  test-int:
+    name: 🏭 Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 🤌 Install bun
+        uses: oven-sh/setup-bun@v2
         with:
-          lcov-file: back/coverage/lcov.info
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          bun-version-file: 'package.json'
+      - run: bun --cwd back install
+      - run: bun --cwd back test:int
 
 
+  test-feat:
+    name: 🏭 Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 🤌 Install bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: 'package.json'
+      - run: bun --cwd back install
+      - run: bun --cwd back test:feat
 
