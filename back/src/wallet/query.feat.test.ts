@@ -7,7 +7,7 @@ describe('Wallet', () => {
   it('should make transaction', async () => {
     // Given
     await Wallet.deposit(Amount(100), TransactionDescription('Initial deposit'))
-    await Wallet.withdraw(Amount(10), TransactionDescription('Kebab land'))
+    await Wallet.withdraw(Amount(10), TransactionDescription('Supermarket'))
 
     // When
     const transactions = await Wallet.history()
