@@ -23,8 +23,6 @@ jobs:
   test-unit:
     name: 🐇 Test Unit
     runs-on: ubuntu-latest
-    env:
-      WITHOUT_FIREBASE_TOOLS: true
     steps:
       - uses: actions/checkout@v4
       - name: 🤌 Install bun
@@ -37,8 +35,6 @@ jobs:
   test-int:
     name: 🐢 Test Integration
     runs-on: ubuntu-latest
-    env:
-      WITHOUT_FIREBASE_TOOLS: true
     steps:
       - uses: actions/checkout@v4
       - name: 🤌 Install bun
@@ -52,6 +48,8 @@ jobs:
   test-feat:
     name: 🐌 Test Feature
     runs-on: ubuntu-latest
+    env:
+      FIREBASE_TOOLS: true
     steps:
       - uses: actions/checkout@v4
       - name: 🤌 Install bun
