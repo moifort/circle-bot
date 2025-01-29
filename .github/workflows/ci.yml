@@ -23,6 +23,8 @@ jobs:
   test-unit:
     name: 🐇 Test Unit
     runs-on: ubuntu-latest
+    env:
+      WITHOUT_FIREBASE_TOOLS: true
     steps:
       - uses: actions/checkout@v4
       - name: 🤌 Install bun
@@ -35,6 +37,8 @@ jobs:
   test-int:
     name: 🐢 Test Integration
     runs-on: ubuntu-latest
+    env:
+      WITHOUT_FIREBASE_TOOLS: true
     steps:
       - uses: actions/checkout@v4
       - name: 🤌 Install bun
@@ -48,6 +52,8 @@ jobs:
   test-feat:
     name: 🐌 Test Feature
     runs-on: ubuntu-latest
+    env:
+      WITHOUT_FIREBASE_TOOLS: false
     steps:
       - uses: actions/checkout@v4
       - name: 🤌 Install bun
@@ -55,10 +61,6 @@ jobs:
         with:
           bun-version-file: 'package.json'
       - run: bun install --production --cwd back
-      - name: 🚀 Firebase emulators
-        uses: w9jds/firebase-action@v13.29.2
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        with:
-          args: emulators:exec --only firestore 'bun test --cwd back feat'
+      - run: bun --cwd back test:feat
+
 
