@@ -2,16 +2,17 @@
   "name": "polymarket-bot",
   "module": "index.ts",
   "scripts": {
+    "postinstall": "if [ -z \\\"$CI\\\" ]; then bun install --global firebase-tools@13.29.2; fi",
     "lint": "bun biome check",
     "check": "bun tsc",
     "build": "pnpm tsc",
-    "bun:dev": "bun firebase emulators:exec --import .emulators --ui --only functions,firestore 'bun build src/index.ts --target=node --outdir=lib --watch'",
-    "dev": "pnpm firebase emulators:exec --import .emulators --ui --only functions,firestore 'pnpm tsc -w'",
+    "bun:dev": "firebase emulators:exec --import .emulators --ui --only functions,firestore 'bun build src/index.ts --target=node --outdir=lib --watch'",
+    "dev": "firebase emulators:exec --import .emulators --ui --only functions,firestore 'pnpm tsc -w'",
     "test:all": "bun test:unit && bun test:int && bun test:feat",
     "test:unit": "bun test unit",
     "test:int": "bun test int",
-    "test:feat": "bun firebase emulators:exec --only firestore 'bun test feat'",
-    "firestore:save": "pnpm firebase emulators:export --force .emulators"
+    "test:feat": "firebase emulators:exec --only firestore 'bun test feat'",
+    "firestore:save": "firebase emulators:export --force .emulators"
   },
   "engines": {
     "node": "22"
@@ -22,7 +23,6 @@
     "@eslint/js": "9.18.0",
     "@types/bun": "1.1.18",
     "@types/lodash": "4.17.14",
-    "firebase-tools": "13.29.2",
     "firebase-functions-test": "3.4.0",
     "typescript": "5.7.3"
   },
