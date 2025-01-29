@@ -52,8 +52,6 @@ jobs:
   test-feat:
     name: 🐌 Test Feature
     runs-on: ubuntu-latest
-    env:
-      WITHOUT_FIREBASE_TOOLS: false
     steps:
       - uses: actions/checkout@v4
       - name: 🤌 Install bun
