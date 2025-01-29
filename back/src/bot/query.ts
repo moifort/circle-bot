@@ -1,6 +1,8 @@
-export namespace Bot {
-  export const run = async () => {
-    console.info('[BOT] run() ')
+import { log } from '../utils/logger'
+
+export class Bot {
+  @log
+  static run() {
     // const [{ id, title, yes, no }] = await Market.latestPoliticalBets()
     // const action = Evaluator.evaluate(yes, no, await Wallet.balance())
     // if (action === 'do-nothing') {
