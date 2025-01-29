@@ -2,7 +2,7 @@
   "name": "polymarket-bot",
   "module": "index.ts",
   "scripts": {
-    "postinstall": "if [[ -z \"$CI\" || -n \"$FIREBASE_TOOLS\" ]]; then bun install --global firebase-tools@13.28; fi",
+    "postinstall": "if [[ -z \"$CI\" || -n \"$FIREBASE_TOOLS\" ]]; then bun install --global firebase-tools@13.29.2; fi",
     "lint": "bun biome check",
     "check": "bun tsc",
     "build": "pnpm tsc",
