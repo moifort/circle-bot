@@ -9,7 +9,8 @@ describe('Evaluator', () => {
     const decision = decide(Percentage(0.9), PolymarketPrice(0.6), Amount(1000))
 
     // Then
-    expect(decision).toEqual({
+    expect(decision.isOk()).toBe(true)
+    expect(decision.getOrThrow()).toEqual({
       amountToBet: Amount(750),
       expectedGain: Amount(300),
     })
@@ -20,14 +21,16 @@ describe('Evaluator', () => {
     const decision = decide(Percentage(0.1), PolymarketPrice(0.6), Amount(1000))
 
     // Then
-    expect(decision).toEqual('do-nothing')
+    expect(decision.isError()).toBe(true)
+    expect(decision.error).toBe('unprofitable-bet')
   })
 
-  it('should not take the bet if amount are very low', () => {
+  it('should not take the bet if unprofitable bet', () => {
     // When
-    const decision = decide(Percentage(0.9), PolymarketPrice(0.6), Amount(1))
+    const decision = decide(Percentage(0.9), PolymarketPrice(0.01), Amount(10))
 
     // Then
-    expect(decision).toEqual('do-nothing')
+    expect(decision.isError()).toBe(true)
+    expect(decision.error).toBe('unprofitable-bet')
   })
 })

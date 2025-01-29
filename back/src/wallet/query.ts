@@ -1,3 +1,4 @@
+import { Result } from 'typescript-result'
 import { v4 as uuid } from 'uuid'
 import { $firestore } from '../index'
 import type { Amount as AmountType } from '../utils/index.type'
@@ -28,6 +29,8 @@ export class Wallet {
 
   @log
   static async withdraw(amount: AmountType, description = TransactionDescription('no-description')) {
+    const currentBalance = await Wallet.balance()
+    if (amount > currentBalance) return Result.error('insufficient-funds' as const)
     const transaction: Transaction = {
       id: TransactionId(uuid()),
       amount,
@@ -36,6 +39,7 @@ export class Wallet {
       createdAt: new Date(),
     }
     await TransactionRepository.save($firestore)(transaction)
+    return Result.ok(transaction)
   }
 
   @log
