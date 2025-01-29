@@ -57,8 +57,6 @@ jobs:
       - run: bun install --production --cwd back
       - name: 🚀 Firebase emulators
         uses: w9jds/firebase-action@v13.29.2
-        env:
-          GCP_SA_KEY: 'not-needed'
         with:
           args: emulators:exec --only firestore 'bun test --cwd back feat'
 
