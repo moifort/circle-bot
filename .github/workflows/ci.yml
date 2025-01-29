@@ -58,8 +58,7 @@ jobs:
       - name: 🚀 Firebase emulators
         uses: w9jds/firebase-action@v13.29.2
         env:
-          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-          PROJECT_ID: ${{ inputs.PROJECT_ID }}
+          GCP_SA_KEY: {}
         with:
           args: emulators:exec --only firestore 'bun test --cwd back feat'
 
