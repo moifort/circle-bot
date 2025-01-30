@@ -7,9 +7,9 @@ import { PolymarketApi } from './infra/polymarket'
 export class Market {
   @log
   static async latestOpenBets() {
-    const bets = await PolymarketApi.findLatestOpenBet(Limit(500))
+    const bets = await PolymarketApi.findLatestOpenBet(Limit(800))
     return bets
-      .filter(({ yes, no }) => yes > 0.15 && no > 0.15)
+      .filter(({ yes, no }) => yes > 0.1 && no > 0.1)
       .filter(({ endAt }) => dayjs(endAt).isBefore(dayjs().add(20, 'day')))
   }
 
