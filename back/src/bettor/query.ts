@@ -1,34 +1,25 @@
-import { Result } from 'typescript-result'
+import { chain } from 'lodash'
 import { $firestore } from '../index'
-import type { BetId, BetOutcome, BetTitle } from '../market/index.type'
-import type { Amount } from '../utils/index.type'
 import { log } from '../utils/logger'
-import type { PlacedBet } from './index.type'
+import { Rules } from './business-rules'
 import { PlacedBetRepository } from './infra/repository'
 
 export class Bettor {
   @log
-  static async placeBet(
-    betId: BetId,
-    betTitle: BetTitle,
-    selectedOutcome: BetOutcome,
-    amountToBet: Amount,
-    potentialGain: Amount,
-  ) {
-    const placeBet: PlacedBet = {
-      id: betId,
-      title: betTitle,
-      outcome: selectedOutcome,
-      amountBet: amountToBet,
-      potentialGain: potentialGain,
-      placedAt: new Date(),
-    }
-    await PlacedBetRepository.save($firestore)(placeBet)
-    return Result.ok(placeBet)
+  static async allPlacedBet() {
+    return await PlacedBetRepository.findAll($firestore)()
   }
 
-  @log
-  static async allPlacedBet() {
-    await PlacedBetRepository.findAll($firestore)()
+  static async totalGain() {
+    const winningBets = await PlacedBetRepository.findAll($firestore)('won')
+    return Rules.totalGain(winningBets)
+  }
+
+  static async totalPotentialGain() {
+    const bets = await PlacedBetRepository.findAll($firestore)()
+    return chain(bets)
+      .filter(({ status }) => status !== 'pending')
+      .sumBy(({ potentialGain }) => potentialGain)
+      .value()
   }
 }

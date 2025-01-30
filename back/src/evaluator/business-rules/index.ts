@@ -12,7 +12,7 @@ export const decide = (estimatedProbability: PercentageType, price: PolymarketPr
   const fractionToBet = denominator > 0 ? numerator / denominator : 0
   const amountToBet = floor(fractionToBet * totalCapital, -1)
   const expectedGain = floor(expectedValue * totalCapital, 0)
-  if (amountToBet > 0 && expectedGain > 10) {
+  if (amountToBet > 0 && expectedGain > 0) {
     return Result.ok({
       amountToBet: Amount(amountToBet),
       expectedGain: Amount(expectedGain),

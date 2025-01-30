@@ -1,6 +1,7 @@
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 // biome-ignore lint/complexity/noBannedTypes: <explanation>
 export function log(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  if (process.env.NODE_ENV === 'test') return
   const originalMethod = descriptor.value
 
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>

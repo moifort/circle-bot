@@ -12,6 +12,7 @@
     "test:unit": "bun test unit",
     "test:int": "bun test int",
     "test:feat": "firebase emulators:exec --only firestore 'bun test feat'",
+    "kill": "lsof -t -i:3000 -i:8085 -i:8080 -i:4400 -i:4500 -i:9150 -i:9099 -i:5000 -i:5001 -i:4000 -i:9229 | xargs kill -9 ",
     "firestore:save": "firebase emulators:export --force .emulators"
   },
   "engines": {

@@ -1,5 +1,5 @@
 import { describe, it } from 'bun:test'
-import { Bot } from './query'
+import { Bot } from './command'
 
 describe('Bot', () => {
   it('should run', async () => {
