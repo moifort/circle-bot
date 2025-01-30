@@ -3,8 +3,7 @@ import { Amount } from '../utils/index.validator'
 import { TransactionDescription } from './index.validator'
 import { Wallet } from './query'
 
-// biome-ignore lint/suspicious/noFocusedTests: <explanation>
-describe.only('Wallet', () => {
+describe('Wallet', () => {
   it('should make transaction', async () => {
     // Given
     await Wallet.deposit(Amount(100), TransactionDescription('Initial deposit'))
