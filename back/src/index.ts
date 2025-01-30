@@ -12,7 +12,11 @@ import { Wallet } from './wallet/query'
 const app = initializeApp()
 export const $firestore = getFirestore(app)
 
-setGlobalOptions({ region: 'europe-west9' })
+setGlobalOptions({
+  region: 'europe-west3',
+  memory: '256MiB',
+  serviceAccount: 'function-invoker@circle-bot-a5808.iam.gserviceaccount.com',
+})
 
 export const bot = onSchedule('every day 06:00', async () => Bot.run())
 
