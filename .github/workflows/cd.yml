@@ -17,6 +17,6 @@ jobs:
         uses: oven-sh/setup-bun@v2
         with:
           bun-version-file: 'package.json'
-      - run: bun install --production --cwd back
+      - run: bun install --cwd back
       - run: bun --cwd back tsc
       - run: firebase --token ${{ secrets.FIREBASE_TOKEN }} deploy --force --only functions,firestore
