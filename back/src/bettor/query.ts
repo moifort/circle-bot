@@ -1,8 +1,25 @@
-import type { BetId, BetOutcome } from '../market/index.type'
-import type { Amount } from '../utils/index.type'
+import { chain } from 'lodash'
+import { $firestore } from '../index'
+import { log } from '../utils/logger'
+import { Rules } from './business-rules'
+import { PlacedBetRepository } from './infra/repository'
 
-export namespace Bettor {
-  export const placeBet = (betId: BetId, selectedOutcome: BetOutcome, amountToBet: Amount) => {
-    console.info(`[BETTOR] placeBet(betId=${betId}, selectedOutcome=${selectedOutcome}, amountToBet=${amountToBet})`)
+export class Bettor {
+  @log
+  static async allPlacedBet() {
+    return await PlacedBetRepository.findAll($firestore)()
+  }
+
+  static async totalGain() {
+    const winningBets = await PlacedBetRepository.findAll($firestore)('won')
+    return Rules.totalGain(winningBets)
+  }
+
+  static async totalPotentialGain() {
+    const bets = await PlacedBetRepository.findAll($firestore)()
+    return chain(bets)
+      .filter(({ status }) => status !== 'pending')
+      .sumBy(({ potentialGain }) => potentialGain)
+      .value()
   }
 }

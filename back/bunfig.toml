@@ -3,3 +3,5 @@ coverageSkipTestFiles = true
 coverageIgnoreSourcemaps = true
 coverageReporter = ["lcov", "text"]
 root = "./src"
+preload = ["./src/utils/setup.test.ts"]
+

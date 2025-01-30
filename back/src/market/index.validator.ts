@@ -10,4 +10,7 @@ import type {
 export const BetId = make<BetIdType>((value) => z.string().nonempty().parse(value))
 export const BetTitle = make<BetTitleType>((value) => z.string().nonempty().parse(value))
 export const BetDescription = make<BetDescriptionType>((value) => z.string().nonempty().parse(value))
-export const BetOutcome = (value: string) => z.union([z.literal('yes'), z.literal('no')]).parse(value) as BetOutcomeType
+export const BetOutcome = (value: string) => {
+  if (!['yes', 'no'].includes(value)) throw new Error('value must be "yes" or "no"')
+  return value as BetOutcomeType
+}

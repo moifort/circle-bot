@@ -10,11 +10,23 @@ describe('Wallet', () => {
     await Wallet.withdraw(Amount(10), TransactionDescription('Supermarket'))
 
     // When
-    const transactions = await Wallet.history()
     const balance = await Wallet.balance()
 
     // Then
     expect(balance).toEqual(Amount(90))
-    expect(transactions).toHaveLength(2)
+    expect(await Wallet.history()).toHaveLength(2)
+  })
+
+  it('should have insufficient funds when withdrawal greater than balance', async () => {
+    // Given
+    await Wallet.deposit(Amount(10), TransactionDescription('Initial deposit'))
+
+    // When
+    const result = await Wallet.withdraw(Amount(100), TransactionDescription('Big purchase'))
+
+    // Then
+    expect(result.isError()).toBe(true)
+    expect(result.error).toEqual('insufficient-funds')
+    expect(await Wallet.history()).toHaveLength(1)
   })
 })
