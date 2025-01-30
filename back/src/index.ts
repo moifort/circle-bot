@@ -1,4 +1,3 @@
-import 'source-map-support/register'
 import { initializeApp } from 'firebase-admin/app'
 import { getFirestore } from 'firebase-admin/firestore'
 import { setGlobalOptions } from 'firebase-functions'
@@ -19,6 +18,11 @@ setGlobalOptions({
 })
 
 export const bot = onSchedule('every day 06:00', async () => Bot.run())
+
+export const botEndPoint = onRequest(async (_, response) => {
+  await Bot.run()
+  response.status(200).send('OK')
+})
 
 export const summarize = onRequest(async (_, response) => {
   const [totalGain, estimatedGain, placedBets, transactions, balance] = await Promise.all([

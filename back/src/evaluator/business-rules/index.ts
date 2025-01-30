@@ -1,6 +1,6 @@
 import { floor } from 'lodash'
 import { Result } from 'typescript-result'
-import type { PolymarketPrice } from '../../market/infra/repository.type'
+import type { PolymarketPrice } from '../../market/infra/polymarket.type'
 import type { Amount as AmountType, Percentage as PercentageType } from '../../utils/index.type'
 import { Amount } from '../../utils/index.validator'
 

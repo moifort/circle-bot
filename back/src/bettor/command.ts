@@ -1,9 +1,10 @@
 import { Result } from 'typescript-result'
+import type { Source, Why } from '../evaluator/index.type'
 import { $firestore } from '../index'
 import type { BetId, BetOutcome, BetTitle } from '../market/index.type'
-import type { PolymarketPrice } from '../market/infra/repository.type'
+import type { PolymarketPrice } from '../market/infra/polymarket.type'
 import { Market } from '../market/query'
-import type { Amount } from '../utils/index.type'
+import type { Amount, Percentage } from '../utils/index.type'
 import { log } from '../utils/logger'
 import type { PlacedBet } from './index.type'
 import { PlacedBetRepository } from './infra/repository'
@@ -13,6 +14,9 @@ export class Bettor {
   static async placeBet(
     betId: BetId,
     betTitle: BetTitle,
+    probabilityToWin: Percentage,
+    reason: Why,
+    sources: Source[],
     betEndAt: Date,
     selectedOutcome: BetOutcome,
     outcomePrice: PolymarketPrice,
@@ -24,6 +28,9 @@ export class Bettor {
       id: betId,
       status: 'pending',
       title: betTitle,
+      probabilityToWin,
+      reason,
+      sources,
       outcome: selectedOutcome,
       outcomePrice,
       amountBet: amountToBet,

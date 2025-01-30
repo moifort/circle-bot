@@ -1,5 +1,5 @@
 import type { Brand } from 'ts-brand'
-import type { PolymarketPrice } from './infra/repository.type'
+import type { PolymarketPrice } from './infra/polymarket.type'
 
 export type BetId = Brand<string, 'BetId'>
 export type BetTitle = Brand<string, 'BetTitle'>

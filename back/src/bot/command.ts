@@ -28,15 +28,27 @@ export class Bot {
     console.log('[BOT] Update placed bet status completed!')
   }
 
-  static async placeBet({ id, title, yes, no, endAt }: OpenBet, currentCapital: AmountType) {
-    return Evaluator.evaluate(yes, no, currentCapital)
+  static async placeBet({ id, title, description, yes, no, endAt }: OpenBet, currentCapital: AmountType) {
+    const evaluation = await Evaluator.evaluate(title, description, yes, no, currentCapital)
+    return evaluation
       .map((evaluation) =>
         Wallet.withdraw(evaluation.amountToBet, TransactionDescription({ betId: id, betTitle: title })).then(
           () => evaluation,
         ),
       )
-      .map(({ outcome, amountToBet, expectedGain }) =>
-        Bettor.placeBet(id, title, endAt, outcome, outcome === 'yes' ? yes : no, amountToBet, expectedGain),
+      .map(({ outcome, amountToBet, expectedGain, probabilityToWin, reason, sources }) =>
+        Bettor.placeBet(
+          id,
+          title,
+          probabilityToWin,
+          reason,
+          sources,
+          endAt,
+          outcome,
+          outcome === 'yes' ? yes : no,
+          amountToBet,
+          expectedGain,
+        ),
       )
   }
 }

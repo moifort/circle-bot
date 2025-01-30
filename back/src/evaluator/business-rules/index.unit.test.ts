@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { PolymarketPrice } from '../../market/infra/repository.validator'
+import { PolymarketPrice } from '../../market/infra/polymarket.validator'
 import { Amount, Percentage } from '../../utils/index.validator'
 import { decide } from './index'
 
