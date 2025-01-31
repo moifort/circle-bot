@@ -35,7 +35,7 @@ export namespace PolymarketApi {
 
   export const findLatestOpenBet = async (limit: Limit) => {
     const response = await fetch(
-      `https://gamma-api.polymarket.com/events/pagination?limit=${limit}&active=true&tag_slug=politics&archived=false&closed=false&order=volume24hr&ascending=false&offset=0`,
+      `https://gamma-api.polymarket.com/events/pagination?limit=${limit}&active=true&archived=false&closed=false&order=volume24hr&ascending=false&offset=0`,
     )
     const { data } = (await response.json()) as PolymarketResponse
     return data
