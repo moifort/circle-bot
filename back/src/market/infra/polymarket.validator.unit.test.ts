@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { PolymarketPrice } from './repository.validator'
+import { PolymarketPrice } from './polymarket.validator'
 
 describe('PolymarketPrice', () => {
   it('should throw if the value is less than 0', () => {

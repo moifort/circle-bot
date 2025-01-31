@@ -2,12 +2,12 @@ import { describe, expect, it } from 'bun:test'
 import { Limit } from '../../utils/index.validator'
 import type { ClosedBet } from '../index.type'
 import { BetId, BetOutcome } from '../index.validator'
-import { GammaApiRepository } from './repository'
+import { PolymarketApi } from './polymarket'
 
 describe('GammaApiRepository', () => {
   it('findBy', async () => {
     // When
-    const closedBet = await GammaApiRepository.findBy(BetId('will-twitter-announce-bankruptcy-in-2023'))
+    const closedBet = await PolymarketApi.findBy(BetId('will-twitter-announce-bankruptcy-in-2023'))
 
     // Then
     expect(closedBet.isOk()).toBe(true)
@@ -21,7 +21,7 @@ describe('GammaApiRepository', () => {
 
   it('findLatestPoliticalOpenBet', async () => {
     // When
-    const [bet] = await GammaApiRepository.findLatestOpenBet(Limit(100))
+    const [bet] = await PolymarketApi.findLatestOpenBet(Limit(100))
 
     // Then
     expect(bet).toContainAllKeys(['id', 'title', 'description', 'endAt', 'updatedAt', 'yes', 'no', 'status'])

@@ -1,10 +1,11 @@
 import { describe, expect, it, spyOn } from 'bun:test'
 import { Result } from 'typescript-result'
+import { Source, Why } from '../evaluator/index.validator'
 import { $firestore } from '../index'
 import { BetId, BetOutcome, BetTitle } from '../market/index.validator'
-import { PolymarketPrice } from '../market/infra/repository.validator'
+import { PolymarketPrice } from '../market/infra/polymarket.validator'
 import { Market } from '../market/query'
-import { Amount } from '../utils/index.validator'
+import { Amount, Percentage } from '../utils/index.validator'
 import { Bettor } from './command'
 import { PlacedBetId } from './index.validator'
 import { PlacedBetRepository } from './infra/repository'
@@ -33,6 +34,9 @@ describe('Bettor', () => {
       potentialGain: Amount(10),
       betEndAt: new Date(),
       placedAt: new Date(),
+      probabilityToWin: Percentage(0.8),
+      reason: Why('Because the world is crazy'),
+      sources: [Source('https://www.polymarket.com/market/will-trump-win-the-election')],
     })
 
     // When

@@ -1,6 +1,6 @@
 import { floor } from 'lodash'
 import { Result } from 'typescript-result'
-import type { PolymarketPrice } from '../../market/infra/repository.type'
+import type { PolymarketPrice } from '../../market/infra/polymarket.type'
 import type { Amount as AmountType, Percentage as PercentageType } from '../../utils/index.type'
 import { Amount } from '../../utils/index.validator'
 
@@ -14,7 +14,7 @@ export const decide = (estimatedProbability: PercentageType, price: PolymarketPr
   const expectedGain = floor(expectedValue * totalCapital, 0)
   if (amountToBet > 0 && expectedGain > 0) {
     return Result.ok({
-      amountToBet: Amount(amountToBet),
+      amountToBet: Amount(amountToBet * 0.5),
       expectedGain: Amount(expectedGain),
     })
   }

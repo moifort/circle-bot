@@ -1,5 +1,5 @@
 import { chain } from 'lodash'
-import type { PolymarketPrice } from '../../market/infra/repository.type'
+import type { PolymarketPrice } from '../../market/infra/polymarket.type'
 import type { Amount as AmountType } from '../../utils/index.type'
 
 export type WinningBet = { outcomePrice: PolymarketPrice; amountBet: AmountType }
