@@ -45,6 +45,7 @@ describe('GeminiApi', () => {
       `)
     const response = result.response.candidates?.[0].content.parts[0].text!
     console.log(JSON.parse(response.replaceAll('```json', '').replaceAll('`', '')))
+    // @ts-ignore
     expect(result).toBe('')
   })
 })
