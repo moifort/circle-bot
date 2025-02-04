@@ -1,4 +1,4 @@
-import { Bettor } from '../bettor/command'
+import { BettorCommand } from '../bettor/command'
 import { Evaluator } from '../evaluator/query'
 import type { OpenBet } from '../market/index.type'
 import { Market } from '../market/query'
@@ -11,7 +11,7 @@ export class Bot {
   @log
   static async run() {
     console.log('[BOT] Start placing bets')
-    const bets = await Market.latestOpenBets()
+    const bets = await Market.getLatestOpenBets()
     for (const bet of bets) {
       const currentCapital = await Wallet.balance()
       console.log(`[BOT] current capital ${currentCapital}`)
@@ -24,8 +24,12 @@ export class Bot {
     }
     console.log(`[BOT] Placing bet completed! Analyzing ${bets.length} bets, current balance ${await Wallet.balance()}`)
     console.log('[BOT] Start updating bets')
-    await Bettor.updateAllPendingBet()
+    await BettorCommand.updateAllPendingBet()
     console.log('[BOT] Update placed bet status completed!')
+    console.log('[BOT] Start redeeming bets')
+    const redeemedAmount = await BettorCommand.redeemAllWonBets()
+    if (redeemedAmount > 0) await Wallet.deposit(redeemedAmount, TransactionDescription('redeem'))
+    console.log(`[BOT] Redeem completed! Amount: ${redeemedAmount}`)
   }
 
   static async placeBet({ id, title, yes, no, endAt }: OpenBet, currentCapital: AmountType) {
@@ -36,7 +40,7 @@ export class Bot {
         ),
       )
       .map(({ outcome, amountToBet, expectedGain }) =>
-        Bettor.placeBet(id, title, endAt, outcome, outcome === 'yes' ? yes : no, amountToBet, expectedGain),
+        BettorCommand.placeBet(id, title, endAt, outcome, outcome === 'yes' ? yes : no, amountToBet, expectedGain),
       )
   }
 }

@@ -51,7 +51,7 @@ describe('PlacedBetRepository', () => {
     })
 
     // When
-    const bets = await PlacedBetRepository.findAll($firestore)()
+    const bets = await PlacedBetRepository.findAll($firestore)('no-filter')
 
     // Then
     expect(bets).toHaveLength(2)

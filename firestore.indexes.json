@@ -9,7 +9,7 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "placedAt",
+          "fieldPath": "betEndAt",
           "order": "ASCENDING"
         }
       ]
