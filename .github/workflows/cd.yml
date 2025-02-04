@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FIREBASE_TOOLS: true
+      FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - name: 🤌 Install bun
@@ -19,4 +20,4 @@ jobs:
           bun-version: '1.2.2'
       - run: bun install --cwd back
       - run: bun --cwd back tsc
-      - run: firebase --token ${{ secrets.FIREBASE_TOKEN }} deploy --force --only functions,firestore
+      - run: firebase deploy --force --only functions,firestore
