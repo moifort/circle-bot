@@ -1,4 +1,3 @@
-import 'source-map-support/register'
 import { initializeApp } from 'firebase-admin/app'
 import { getFirestore } from 'firebase-admin/firestore'
 import { setGlobalOptions } from 'firebase-functions'

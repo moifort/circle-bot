@@ -16,7 +16,7 @@ jobs:
       - name: 🤌 Install bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version-file: 'package.json'
+          bun-version: '1.2.2'
       - run: bun install --cwd back
       - run: bun --cwd back biome ci
 
@@ -28,7 +28,7 @@ jobs:
       - name: 🤌 Install bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version-file: 'package.json'
+          bun-version: '1.2.2'
       - run: bun install --production --cwd back
       - run: bun --cwd back test:unit
 
@@ -40,7 +40,7 @@ jobs:
       - name: 🤌 Install bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version-file: 'package.json'
+          bun-version: '1.2.2'
       - run: bun install --production --cwd back
       - run: bun --cwd back test:int
 
@@ -55,7 +55,7 @@ jobs:
       - name: 🤌 Install bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version-file: 'package.json'
+          bun-version: '1.2.2'
       - run: bun install --production --cwd back
       - run: bun --cwd back test:feat
 
