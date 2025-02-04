@@ -73,7 +73,7 @@ describe('Bettor', () => {
 
     // Then
     expect(redeemAmount).toBe(Amount(458))
-    expect(await BettorQuery.getTotalGain()).toBe(Amount(158))
+    expect(await BettorQuery.getGain()).toBe(Amount(158))
     expect(await PlacedBetRepository.findAll($firestore)('redeemed')).toHaveLength(2)
   })
 })
