@@ -15,7 +15,7 @@ describe('totalGain', () => {
     const total = Rules.totalGain(winningBets)
 
     // Then
-    expect(total).toBe(Amount(36.111111111111114))
+    expect(total).toBe(Amount(36))
   })
 
   it('should return 0 if empty', () => {

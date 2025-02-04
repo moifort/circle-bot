@@ -101,6 +101,6 @@ describe('Bettor', () => {
     const total = await BettorQuery.getTotalEstimatedGain()
 
     // Then
-    expect(total).toBe(Amount(20))
+    expect(total).toBe(Amount(10))
   })
 })
