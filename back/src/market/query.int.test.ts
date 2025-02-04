@@ -5,7 +5,7 @@ import { Market } from './query'
 describe('Market', () => {
   it('latestOpenBets', async () => {
     // When
-    const bets = await Market.latestOpenBets()
+    const bets = await Market.getLatestOpenBets()
 
     // Then
     expect(bets).toBeArray()
@@ -13,7 +13,7 @@ describe('Market', () => {
 
   it('bet', async () => {
     // When
-    const bet = await Market.bet(BetId('will-twitter-announce-bankruptcy-in-2023'))
+    const bet = await Market.getBet(BetId('will-twitter-announce-bankruptcy-in-2023'))
 
     // Then
     expect(bet.isOk()).toBeTruthy()
@@ -27,7 +27,7 @@ describe('Market', () => {
 
   it('bets', async () => {
     // When
-    const [bet] = await Market.bets([BetId('will-twitter-announce-bankruptcy-in-2023')])
+    const [bet] = await Market.getAllBet([BetId('will-twitter-announce-bankruptcy-in-2023')])
 
     // Then
     expect(bet.isOk()).toBeTruthy()

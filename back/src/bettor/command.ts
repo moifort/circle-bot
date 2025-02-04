@@ -1,14 +1,16 @@
+import { chain, floor } from 'lodash'
 import { Result } from 'typescript-result'
 import { $firestore } from '../index'
 import type { BetId, BetOutcome, BetTitle } from '../market/index.type'
 import type { PolymarketPrice } from '../market/infra/repository.type'
 import { Market } from '../market/query'
-import type { Amount } from '../utils/index.type'
+import type { Amount as AmountType } from '../utils/index.type'
+import { Amount } from '../utils/index.validator'
 import { log } from '../utils/logger'
-import type { PlacedBet } from './index.type'
+import { Rules } from './business-rules'
 import { PlacedBetRepository } from './infra/repository'
 
-export class Bettor {
+export class BettorCommand {
   @log
   static async placeBet(
     betId: BetId,
@@ -16,13 +18,13 @@ export class Bettor {
     betEndAt: Date,
     selectedOutcome: BetOutcome,
     outcomePrice: PolymarketPrice,
-    amountToBet: Amount,
-    potentialGain: Amount,
+    amountToBet: AmountType,
+    potentialGain: AmountType,
   ) {
     if (await PlacedBetRepository.exist($firestore)(betId)) return Result.error('bet-already-placed' as const)
-    const placeBet: PlacedBet = {
+    const placeBet = {
       id: betId,
-      status: 'pending',
+      status: 'pending' as const,
       title: betTitle,
       outcome: selectedOutcome,
       outcomePrice,
@@ -38,15 +40,24 @@ export class Bettor {
   @log
   static async updateAllPendingBet() {
     const pendingBets = await PlacedBetRepository.findAll($firestore)('pending')
-    for (const pendingBet of pendingBets) {
-      const result = await Market.bet(pendingBet.id)
-      if (!result.isError() && result.value.status === 'closed') {
+    for (const { id, outcome } of pendingBets) {
+      const result = await Market.getBet(id)
+      if (result.isError()) continue
+      if (result.value.status === 'closed') {
         const { winningOutcome } = result.value
-        await PlacedBetRepository.update($firestore)({
-          id: pendingBet.id,
-          status: winningOutcome === pendingBet.outcome ? 'won' : 'lost',
-        })
+        const status = winningOutcome === outcome ? 'won' : 'lost'
+        await PlacedBetRepository.update($firestore)({ id, status })
       }
     }
+  }
+
+  @log
+  static async redeemAllWonBets() {
+    const wonBets = await PlacedBetRepository.findAll($firestore)('won')
+    const redeemAmount = chain(wonBets)
+      .sumBy(({ amountBet, outcomePrice }) => amountBet + Rules.gain(outcomePrice, amountBet))
+      .value()
+    await Promise.all(wonBets.map(({ id }) => PlacedBetRepository.update($firestore)({ id, status: 'redeemed' })))
+    return Amount(floor(redeemAmount))
   }
 }

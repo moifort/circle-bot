@@ -5,7 +5,7 @@ import { PolymarketPrice } from '../market/infra/repository.validator'
 import { Amount } from '../utils/index.validator'
 import { PlacedBetId } from './index.validator'
 import { PlacedBetRepository } from './infra/repository'
-import { Bettor } from './query'
+import { BettorQuery } from './query'
 
 describe('Bettor', () => {
   it('allPlacedBet', async () => {
@@ -23,7 +23,7 @@ describe('Bettor', () => {
     })
 
     // When
-    const bets = await Bettor.allPlacedBet()
+    const bets = await BettorQuery.getAllPlacedBet()
 
     // Then
     expect(bets).toHaveLength(1)
@@ -33,7 +33,7 @@ describe('Bettor', () => {
     // Given
     await PlacedBetRepository.save($firestore)({
       id: PlacedBetId('bet-id-01'),
-      status: 'won',
+      status: 'redeemed' as const,
       title: BetTitle('Trump will win the election'),
       outcome: 'yes',
       outcomePrice: PolymarketPrice(0.8),
@@ -44,7 +44,7 @@ describe('Bettor', () => {
     })
     await PlacedBetRepository.save($firestore)({
       id: PlacedBetId('bet-id-02'),
-      status: 'won',
+      status: 'redeemed' as const,
       title: BetTitle('Tiktok will be bankrupt in 2021'),
       outcome: 'no',
       outcomePrice: PolymarketPrice(0.8),
@@ -55,7 +55,7 @@ describe('Bettor', () => {
     })
 
     // When
-    const total = await Bettor.totalGain()
+    const total = await BettorQuery.getTotalGain()
 
     // Then
     expect(total).toBe(Amount(50))
@@ -98,7 +98,7 @@ describe('Bettor', () => {
     })
 
     // When
-    const total = await Bettor.totalPotentialGain()
+    const total = await BettorQuery.getTotalEstimatedGain()
 
     // Then
     expect(total).toBe(Amount(20))

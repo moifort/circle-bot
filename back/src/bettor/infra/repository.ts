@@ -1,20 +1,22 @@
 import type { Firestore } from 'firebase-admin/firestore'
 import { genericDataConverter } from '../../utils/firestore'
 import type { PartialEntity } from '../../utils/index.type'
-import type { PlacedBet, PlacedBetId, PlacedBetStatus } from '../index.type'
+import type { PlacedBet, PlacedBetId, PlacedBetStatus, PlacedBets } from '../index.type'
 
 export namespace PlacedBetRepository {
-  export const save = (db: Firestore) => async (placedBet: PlacedBet) => update(db)(placedBet)
-  export const update = (db: Firestore) => async (placedBet: PartialEntity<PlacedBet>) => {
-    await collection(db).doc(placedBet.id).set(placedBet, { merge: true })
+  export const save = (db: Firestore) => async (pendingBet: PlacedBet) => update(db)(pendingBet)
+  export const update = (db: Firestore) => async (pendingBet: PartialEntity<PlacedBet>) => {
+    await collection(db).doc(pendingBet.id).set(pendingBet, { merge: true })
   }
 
-  export const findAll = (db: Firestore) => async (filterBy?: PlacedBetStatus) => {
-    let query = collection(db).orderBy('placedAt', 'asc')
-    if (filterBy) query = query.where('status', '==', filterBy)
-    const data = await query.get()
-    return data.docs.map((doc) => doc.data())
-  }
+  export const findAll =
+    (db: Firestore) =>
+    async <STATUS extends PlacedBetStatus | 'no-filter'>(filterBy: STATUS): Promise<PlacedBets<STATUS>> => {
+      let query = collection(db).orderBy('betEndAt', 'asc')
+      if (filterBy !== 'no-filter') query = query.where('status', '==', filterBy)
+      const data = await query.get()
+      return data.docs.map((doc) => doc.data()) as PlacedBets<STATUS>
+    }
 
   export const exist = (db: Firestore) => async (id: PlacedBetId) => {
     const data = await collection(db).doc(id).get()
