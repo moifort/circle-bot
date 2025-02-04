@@ -24,14 +24,16 @@ export const bot = onSchedule('every day 06:00', async () => Bot.run())
 // })
 
 export const summarize = onRequest(async (_, response) => {
-  const [totalGain, estimatedGain, futureEstimatedGain, placedBets, transactions, balance] = await Promise.all([
-    BettorQuery.getTotalGain(),
-    BettorQuery.getTotalEstimatedGain(),
-    BettorQuery.getTotalFuturEstimatedGain(),
-    BettorQuery.getAllPlacedBet(),
-    Wallet.history(),
-    Wallet.balance(),
-  ])
+  const [totalLoss, totalGain, estimatedGain, futureEstimatedGain, placedBets, transactions, balance] =
+    await Promise.all([
+      BettorQuery.getLoss(),
+      BettorQuery.getGain(),
+      BettorQuery.getEstimatedGain(),
+      BettorQuery.getComingEstimatedGain(),
+      BettorQuery.getAllBets(),
+      Wallet.history(),
+      Wallet.balance(),
+    ])
   response.status(200).send(`
 <!DOCTYPE html>
 <html lang="fr">
@@ -45,6 +47,7 @@ export const summarize = onRequest(async (_, response) => {
   </head>
   <body>
 Total gain: ${totalGain} (Estimated gain: ${estimatedGain} - Estimated future gain: ${futureEstimatedGain})
+Total loss: ${totalLoss}
 Actual balance: ${balance}  (Initial balance: 1000)
 <br>
 Placed bets
