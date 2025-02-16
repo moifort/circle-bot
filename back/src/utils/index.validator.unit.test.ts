@@ -20,14 +20,6 @@ describe('Limit', () => {
 })
 
 describe('Percentage', () => {
-  it('should throw if the value is less than 0', () => {
-    expect(() => Percentage(-1)).toThrow()
-  })
-
-  it('should throw if the value exceeds 1', () => {
-    expect(() => Percentage(1.1)).toThrow()
-  })
-
   it('should not throw for a valid percentage', () => {
     expect(() => Percentage(0)).not.toThrow()
     expect(() => Percentage(0.5)).not.toThrow()

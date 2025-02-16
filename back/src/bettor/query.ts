@@ -1,6 +1,7 @@
 import { chain } from 'lodash'
 import { $firestore } from '../index'
-import { Amount } from '../utils/index.validator'
+import type { Amount as AmountType } from '../utils/index.type'
+import { Amount, Percentage } from '../utils/index.validator'
 import { log } from '../utils/logger'
 import { Rules } from './business-rules'
 import { PlacedBetRepository } from './infra/repository'
@@ -15,6 +16,14 @@ export class BettorQuery {
   static async getGain() {
     const winningBets = await PlacedBetRepository.findAll($firestore)('redeemed')
     return Rules.totalGain(winningBets)
+  }
+
+  @log
+  static async getReturnOnInvestment(initialAmount: AmountType) {
+    const [gain, loss] = await Promise.all([BettorQuery.getGain(), BettorQuery.getLoss()])
+    const netGain = gain - loss
+    const percentageReturn = netGain / initialAmount
+    return Percentage(percentageReturn)
   }
 
   @log
