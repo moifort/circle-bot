@@ -1,0 +1,36 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "repositories": [
+    "moifort/circle-bot"
+  ],
+  "platformAutomerge": true,
+  "automerge": false,
+  "prCreation": "immediate",
+  "dependencyDashboard": true,
+  "prHourlyLimit": 10,
+  "recreateWhen": "always",
+  "platform": "github",
+  "packageRules": [
+    {
+      "matchPackageNames": [
+        "node"
+      ],
+      "enabled": false
+    },
+    {
+      "groupName": "all non-major dependencies",
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
+      "groupSlug": "all-minor-patch",
+      "automerge": true
+    },
+    {
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": true
+    }
+  ]
+}
