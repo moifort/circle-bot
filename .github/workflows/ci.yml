@@ -50,7 +50,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FIREBASE_TOOLS: true
-      FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - name: 🤌 Install bun
