@@ -20,4 +20,9 @@ jobs:
           bun-version: '1.2.2'
       - run: bun install --cwd back
       - run: bun --cwd back tsc
-      - run: firebase deploy --force --only functions,firestore
+      - name: 🚀 Deploy to Firebase
+        uses: w9jds/firebase-action@v13.31.1
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+        with:
+          args: deploy --force
