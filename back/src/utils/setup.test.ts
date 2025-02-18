@@ -5,10 +5,14 @@ import type firebase from 'firebase/compat/app'
 let testEnv: RulesTestEnvironment
 export let $testFirestore: firebase.firestore.Firestore
 beforeAll(async () => {
-  testEnv = await initializeTestEnvironment({})
-  $testFirestore = testEnv.unauthenticatedContext().firestore()
+  if (Bun.env.npm_lifecycle_event === 'test:feat') {
+    testEnv = await initializeTestEnvironment({})
+    $testFirestore = testEnv.unauthenticatedContext().firestore()
+  }
 })
 
 afterEach(async () => {
-  await testEnv.clearFirestore()
+  if (Bun.env.npm_lifecycle_event === 'test:feat') {
+    await testEnv.clearFirestore()
+  }
 })
