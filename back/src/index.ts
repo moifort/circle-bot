@@ -2,6 +2,7 @@ import { initializeApp } from 'firebase-admin/app'
 import { getFirestore } from 'firebase-admin/firestore'
 import { setGlobalOptions } from 'firebase-functions'
 import { onRequest } from 'firebase-functions/https'
+import { defineString } from 'firebase-functions/params'
 import { onSchedule } from 'firebase-functions/scheduler'
 import { BettorQuery } from './bettor/query'
 import { Bot } from './bot/command'
@@ -18,11 +19,12 @@ setGlobalOptions({
   serviceAccount: 'function-invoker@circle-bot-a5808.iam.gserviceaccount.com',
 })
 
-export const bot = onSchedule('every day 06:00', async () => Bot.run())
-// export const bot = onRequest(async (_, response) => {
-//   await Bot.run()
-//   response.status(200).send('OK')
-// })
+export const bot = defineString('ENVIRONMENT').equals('development')
+  ? onRequest(async (_, response) => {
+      await Bot.run()
+      response.status(200).send('OK')
+    })
+  : onSchedule('every day 06:00', async () => Bot.run())
 
 export const summarize = onRequest(async (_, response) => {
   const [roi, totalLoss, totalGain, estimatedGain, futureEstimatedGain, placedBets, transactions, balance] =
