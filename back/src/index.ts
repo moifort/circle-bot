@@ -2,7 +2,6 @@ import { initializeApp } from 'firebase-admin/app'
 import { getFirestore } from 'firebase-admin/firestore'
 import { setGlobalOptions } from 'firebase-functions'
 import { onRequest } from 'firebase-functions/https'
-import { defineString } from 'firebase-functions/params'
 import { onSchedule } from 'firebase-functions/scheduler'
 import { BettorQuery } from './bettor/query'
 import { Bot } from './bot/command'
@@ -19,7 +18,7 @@ setGlobalOptions({
   serviceAccount: 'function-invoker@circle-bot-a5808.iam.gserviceaccount.com',
 })
 
-export const bot = defineString('ENVIRONMENT').equals('development')
+export const bot = process.env.FUNCTIONS_EMULATOR
   ? onRequest(async (_, response) => {
       await Bot.run()
       response.status(200).send('OK')
