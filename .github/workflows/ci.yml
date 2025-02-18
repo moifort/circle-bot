@@ -13,10 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: 🤌 Install bun
+      - name: 🥟 Install bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: '1.2.2'
+      - name: 🔓 Unlock secrets
+        uses: sliteteam/github-action-git-crypt-unlock@1.3.0
+        env:
+          GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
       - run: bun install --cwd back
       - run: bun --cwd back biome ci
 
@@ -25,10 +29,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: 🤌 Install bun
+      - name: 🥟 Install bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: '1.2.2'
+      - name: 🔓 Unlock secrets
+        uses: sliteteam/github-action-git-crypt-unlock@1.3.0
+        env:
+          GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
       - run: bun install --production --cwd back
       - run: bun --cwd back test:unit
 
@@ -37,10 +45,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: 🤌 Install bun
+      - name: 🥟 Install bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: '1.2.2'
+      - name: 🔓 Unlock secrets
+        uses: sliteteam/github-action-git-crypt-unlock@1.3.0
+        env:
+          GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
       - run: bun install --production --cwd back
       - run: bun --cwd back test:int
 
@@ -52,10 +64,14 @@ jobs:
       FIREBASE_TOOLS: true
     steps:
       - uses: actions/checkout@v4
-      - name: 🤌 Install bun
+      - name: 🥟 Install bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: '1.2.2'
+      - name: 🔓 Unlock secrets
+        uses: sliteteam/github-action-git-crypt-unlock@1.3.0
+        env:
+          GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
       - run: bun install --production --cwd back
       - run: bun --cwd back test:feat
 
