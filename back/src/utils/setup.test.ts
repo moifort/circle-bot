@@ -1,18 +1,14 @@
 import { afterEach, beforeAll } from 'bun:test'
 import { type RulesTestEnvironment, initializeTestEnvironment } from '@firebase/rules-unit-testing'
-import type firebase from 'firebase/compat/app'
 
-let testEnv: RulesTestEnvironment
-export let $testFirestore: firebase.firestore.Firestore
-beforeAll(async () => {
-  if (Bun.env.npm_lifecycle_event === 'test:feat') {
+if (Bun.env.npm_lifecycle_event === 'test:feat') {
+  let testEnv: RulesTestEnvironment
+
+  beforeAll(async () => {
     testEnv = await initializeTestEnvironment({})
-    $testFirestore = testEnv.unauthenticatedContext().firestore()
-  }
-})
+  })
 
-afterEach(async () => {
-  if (Bun.env.npm_lifecycle_event === 'test:feat') {
+  afterEach(async () => {
     await testEnv.clearFirestore()
-  }
-})
+  })
+}
