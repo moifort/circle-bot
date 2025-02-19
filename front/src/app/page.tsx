@@ -1,6 +1,6 @@
+import {Avatar, AvatarFallback} from "@/components/atoms/avatar";
 import {SidebarInset, SidebarProvider} from "@/components/atoms/sidebar";
 import {Bets} from "@/components/organisms/bets";
-import {Avatar, AvatarFallback} from "@/components/atoms/avatar";
 
 export default function Dashboard() {
 	return (
@@ -20,7 +20,7 @@ export default function Dashboard() {
 							</Avatar>
 						</div>
 					</div>
-					<div className="grid auto-rows-min gap-4 md:grid-cols-3">
+					<div className="grid auto-rows-min gap-4 sm:grid-cols-3">
 						<div className="aspect-video rounded-xl bg-muted/50" />
 						<div className="aspect-video rounded-xl bg-muted/50" />
 						<div className="aspect-video rounded-xl bg-muted/50" />

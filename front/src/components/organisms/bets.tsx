@@ -1,6 +1,13 @@
 "use client";
 
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/atoms/table";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/atoms/table";
 import * as React from "react";
 
 const data = [
