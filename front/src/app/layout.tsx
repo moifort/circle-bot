@@ -24,7 +24,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-      <>
           <html lang="en" suppressHydrationWarning>
           <head />
           <body>
@@ -32,12 +31,10 @@ export default function RootLayout({
               attribute="class"
               defaultTheme="system"
               enableSystem
-              disableTransitionOnChange
           >
               {children}
           </ThemeProvider>
           </body>
           </html>
-      </>
   );
 }
