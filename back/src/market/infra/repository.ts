@@ -1,7 +1,6 @@
 import { Result } from 'typescript-result'
 import type { Limit } from '../../utils/index.type'
-import type { ClosedBet, OpenBet } from '../index.type'
-import type { BetId as BedIdType } from '../index.type'
+import type { BetId as BedIdType, ClosedBet, OpenBet } from '../index.type'
 import { BetDescription, BetId, BetOutcome, BetTitle } from '../index.validator'
 import type { PolymarketEvent, PolymarketResponse } from './repository.type'
 import { PolymarketPrice } from './repository.validator'
