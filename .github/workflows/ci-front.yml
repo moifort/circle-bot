@@ -30,7 +30,7 @@ jobs:
       - name: 🖥️ Install Playwright
         run: bunx playwright install --with-deps
       - name: 📖 Build Storybook
-        run: bun --cwd front storybook:build --quiet
+        run: bun --cwd front storybook:build
       - name: Serve Storybook and run tests
         run: |
           bunx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
