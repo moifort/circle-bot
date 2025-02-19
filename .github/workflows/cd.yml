@@ -23,6 +23,8 @@ jobs:
           GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
       - run: bun install --cwd back
       - run: bun --cwd back tsc
+      - run: bun install --cwd front
+      - run: bun --cwd front build
       - name: 🚀 Deploy to Firebase
         uses: w9jds/firebase-action@v13.31.1
         env:
