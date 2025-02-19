@@ -1,6 +1,6 @@
-import {Avatar, AvatarFallback} from "@/components/atoms/avatar";
-import {SidebarInset, SidebarProvider} from "@/components/atoms/sidebar";
-import {Bets} from "@/components/organisms/bets";
+import { Avatar, AvatarFallback } from "@/components/atoms/avatar";
+import { SidebarInset, SidebarProvider } from "@/components/atoms/sidebar";
+import { Bets } from "@/components/organisms/bets";
 
 export default function Dashboard() {
 	return (
