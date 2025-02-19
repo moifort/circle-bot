@@ -15,3 +15,24 @@ jobs:
           bun-version: '1.2.2'
       - run: bun install --cwd front
       - run: bun --cwd front biome ci
+
+
+  test:
+    name: 🧪 Test storybook
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 🥟 Install bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.2.2'
+      - run: bun install --cwd front
+      - name: 🖥️ Install Playwright
+        run: bunx playwright install --with-deps
+      - name: 📖 Build Storybook
+        run: bun --cwd front storybook:build --quiet
+      - name: Serve Storybook and run tests
+        run: |
+          bunx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
+            "bunx http-server storybook-static --port 6006 --silent" \
+            "bunx wait-on tcp:127.0.0.1:6006 && bunx storybook:test"

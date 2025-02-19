@@ -1,18 +1,18 @@
-"use client";
+'use client'
 
-import { Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
+import { Moon, Sun } from 'lucide-react'
+import { useTheme } from 'next-themes'
 
-import { Button } from "@/components/atoms/button";
+import { Button } from '@/components/atoms/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/atoms/dropdown-menu";
+} from '@/components/atoms/dropdown-menu'
 
 export function ModeToggle() {
-  const { setTheme } = useTheme();
+  const { setTheme } = useTheme()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -23,10 +23,10 @@ export function ModeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>Light</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>Dark</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>System</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme('light')}>Light</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme('dark')}>Dark</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme('system')}>System</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }
