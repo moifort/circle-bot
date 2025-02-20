@@ -1,12 +1,11 @@
 {
-  "name": "polymarket-bot",
+  "name": "circle-back",
   "module": "index.ts",
   "scripts": {
     "postinstall": "if [[ -z \"$CI\" || -n \"$FIREBASE_TOOLS\" ]]; then bun install --global firebase-tools@13.31.1; fi",
     "lint": "bun biome check",
     "check": "bun tsc",
     "build": "pnpm tsc",
-    "bun:dev": "firebase emulators:exec --import .emulators --ui --only functions,firestore 'bun build src/index.ts --target=node --outdir=lib --watch'",
     "dev": "firebase emulators:exec --import .emulators --ui --only functions,firestore 'bun tsc --watch'",
     "test:all": "bun test:unit && bun test:int && bun test:feat",
     "test:unit": "bun test unit",
