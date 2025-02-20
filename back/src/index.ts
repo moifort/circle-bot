@@ -3,6 +3,7 @@ import { getFirestore } from 'firebase-admin/firestore'
 import { setGlobalOptions } from 'firebase-functions'
 import { onRequest } from 'firebase-functions/https'
 import { onSchedule } from 'firebase-functions/scheduler'
+import { graphQlServer } from './api'
 import { BettorQuery } from './bettor/query'
 import { Bot } from './bot/command'
 import { Amount } from './utils/index.validator'
@@ -16,6 +17,11 @@ setGlobalOptions({
   region: 'europe-west3',
   memory: '256MiB',
   serviceAccount: 'function-invoker@circle-bot-a5808.iam.gserviceaccount.com',
+})
+
+export const api = onRequest(async (req, res) => {
+  const app = await graphQlServer()
+  return app(req, res)
 })
 
 export const bot = process.env.FUNCTIONS_EMULATOR

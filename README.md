@@ -16,7 +16,10 @@ Automated strategist for Polymarket platform bets
 bun install
 bun dev
 ```
-- Front page: http://localhost:3000/
-- Summarize page: http://127.0.0.1:5001/circle-bot-a5808/europe-west3/summarize
-- Run the bot: http://127.0.0.1:5001/circle-bot-a5808/europe-west3/bot
-- See Firebase emulators: http://localhost:4000/
+
+## 🔗 Links
+- [🖥️ Dashboard](http://localhost:3000/)
+- [🗒️ Summarize](http://127.0.0.1:5001/circle-bot-a5808/europe-west3/summarize)
+- [🤖 Bot](http://127.0.0.1:5001/circle-bot-a5808/europe-west3/bot)
+- [🔥 Emulators](http://localhost:4000/)
+- [💈 GraphQL console](http://127.0.0.1:5001/circle-bot-a5808/europe-west3/api)
