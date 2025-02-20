@@ -17,7 +17,7 @@ jobs:
       - run: bun --cwd front biome ci
 
 
-  test:
+  storybook-test:
     name: 🧪 Test storybook
     runs-on: ubuntu-latest
     steps:
@@ -35,4 +35,4 @@ jobs:
         run: |
           bunx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
             "bunx http-server storybook-static --port 6006 --silent" \
-            "bunx wait-on tcp:127.0.0.1:6006 && bunx storybook:test"
+            "bunx wait-on tcp:127.0.0.1:6006 && bunx --cwd front storybook:test"
