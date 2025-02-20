@@ -1,4 +1,4 @@
-import { Bets } from '@/components/organisms/Bets'
+import { Bets } from '@/components/molecules/Bets'
 import type { Meta, StoryObj } from '@storybook/react'
 
 const meta = {

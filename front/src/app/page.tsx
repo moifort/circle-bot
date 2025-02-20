@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback } from '@/components/atoms/avatar'
 import { SidebarInset, SidebarProvider } from '@/components/atoms/sidebar'
-import { Bets } from '@/components/organisms/Bets'
+import { Bets } from '@/components/molecules/Bets'
 
 export default function Dashboard() {
   return (
