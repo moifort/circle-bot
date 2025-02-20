@@ -1,4 +1,6 @@
-# polymarket-bot
+# Circle Bot 🤖
+
+Automated strategist for Polymarket platform bets
 
 ## 📋 Requirements
 
