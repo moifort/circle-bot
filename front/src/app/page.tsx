@@ -14,7 +14,7 @@ export default function Dashboard() {
             </div>
             <div>
               <Avatar>
-                <AvatarFallback className="text-2xl">🤖</AvatarFallback>
+                <AvatarFallback className="text-3xl">⦿</AvatarFallback>
               </Avatar>
             </div>
           </div>
