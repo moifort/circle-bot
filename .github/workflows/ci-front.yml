@@ -18,7 +18,7 @@ jobs:
 
 
   storybook-test:
-    name: 🧪 Test storybook
+    name: 📖 Test storybook
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -34,5 +34,5 @@ jobs:
       - name: Serve Storybook and run tests
         run: |
           bunx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
-            "bunx http-server storybook-static --port 6006 --silent" \
+            "bunx http-server front/storybook-static --port 6006 --silent" \
             "bunx wait-on tcp:127.0.0.1:6006 && bun --cwd front storybook:test"
