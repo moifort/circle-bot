@@ -1,36 +1,21 @@
-import { ApolloServer } from '@apollo/server'
+import * as path from 'node:path'
+import { ApolloServer, type BaseContext } from '@apollo/server'
 import { expressMiddleware } from '@apollo/server/express4'
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default'
+import { loadFilesSync } from '@graphql-tools/load-files'
+import { mergeResolvers, mergeTypeDefs } from '@graphql-tools/merge'
 import cors from 'cors'
 import type { Express } from 'express'
 import express from 'express'
 
-const typeDefs = `#graphql
-type Book {
-    title: String
-    author: String
-}
-
-type Query {
-    books: [Book]
-}
-`
-
-const resolvers = {
-  Query: {
-    books: () => [
-      { title: 'The Great Gatsby', author: 'F. Scott Fitzgerald' },
-      { title: 'Moby', author: 'Herman Melville' },
-    ],
-  },
-}
-
 let instance: Express | null = null
 export const graphQlServer = async () => {
   if (instance) return instance
+  const typeDefFiles = loadFilesSync(path.join(__dirname, '../**/graphql/typedefs.*'))
+  const resolverFiles = loadFilesSync(path.join(__dirname, '../**/graphql/resolvers.*'))
   const server = new ApolloServer({
-    typeDefs,
-    resolvers,
+    typeDefs: mergeTypeDefs(typeDefFiles),
+    resolvers: mergeResolvers<unknown, BaseContext>(resolverFiles),
     plugins: [ApolloServerPluginLandingPageLocalDefault()],
   })
   const app = express()
