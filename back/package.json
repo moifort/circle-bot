@@ -12,7 +12,8 @@
     "test:int": "bun test int",
     "test:feat": "firebase emulators:exec --only firestore 'bun test feat'",
     "kill": "lsof -t -i:3000 -i:8085 -i:8080 -i:4400 -i:4500 -i:9150 -i:9099 -i:5000 -i:5001 -i:4000 -i:9229 | xargs kill -9 ",
-    "firestore:save": "firebase emulators:export --force .emulators"
+    "firestore:save": "firebase emulators:export --force .emulators",
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "engines": {
     "node": "22"
@@ -40,9 +41,14 @@
     "@biomejs/biome": "1.9.4",
     "@eslint/js": "9.21.0",
     "@firebase/rules-unit-testing": "4.0.1",
+    "@graphql-codegen/cli": "5.0.5",
+    "@graphql-codegen/typescript": "4.1.5",
+    "@graphql-codegen/typescript-resolvers": "4.4.4",
     "@types/bun": "1.2.3",
     "@types/lodash": "4.17.15",
     "firebase-functions-test": "3.4.0",
-    "typescript": "5.7.3"
+    "typescript": "5.7.3",
+    "@graphql-codegen/typescript-document-nodes": "4.0.15",
+    "@graphql-codegen/introspection": "4.0.3"
   }
 }
