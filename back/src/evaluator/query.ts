@@ -29,7 +29,7 @@ export namespace Evaluator {
     yes: PolymarketPrice,
     no: PolymarketPrice,
     currentCapital: AmountType,
-  ): Result<{ outcome: BetOutcomeType; amountToBet: AmountType }, unknown> => {
+  ): Result<{ outcome: BetOutcomeType; amountToBet: AmountType }, string> => {
     throw new Error('Not implemented')
   }
 }

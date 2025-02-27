@@ -40,7 +40,6 @@
     "@biomejs/biome": "1.9.4",
     "@eslint/js": "9.21.0",
     "@firebase/rules-unit-testing": "4.0.1",
-    "@json2csv/node": "7.0.6",
     "@types/bun": "1.2.3",
     "@types/lodash": "4.17.15",
     "firebase-functions-test": "3.4.0",
