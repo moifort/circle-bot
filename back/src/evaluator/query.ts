@@ -8,17 +8,17 @@ import { Percentage } from '../utils/index.validator'
 import { decideFavorite } from './business-rules'
 
 export namespace Evaluator {
-  export const evaluateWithFavoriteStrategy = (yes: PolymarketPrice, no: PolymarketPrice, totalCapital: AmountType) => {
-    if (totalCapital < 10) return Result.error('funds-too-low' as const)
+  export const evaluateWithFavoriteStrategy = (yes: PolymarketPrice, no: PolymarketPrice, bankroll: AmountType) => {
+    if (bankroll < 10) return Result.error('funds-too-low' as const)
     const yesEstimation = Percentage(clamp(yes + 0.05, 0, 1))
     const noEstimation = Percentage(clamp(no + 0.05, 0, 1))
     if (yesEstimation > noEstimation) {
-      return decideFavorite(yesEstimation, yes, totalCapital).map((action) => ({
+      return decideFavorite(yesEstimation, yes, bankroll).map((action) => ({
         outcome: BetOutcome('yes'),
         amountToBet: action.amountToBet,
       }))
     }
-    return decideFavorite(noEstimation, no, totalCapital).map((action) => ({
+    return decideFavorite(noEstimation, no, bankroll).map((action) => ({
       outcome: BetOutcome('no'),
       amountToBet: action.amountToBet,
     }))
