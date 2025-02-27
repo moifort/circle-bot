@@ -67,6 +67,9 @@ export const summarize = onRequest(async (request, response) => {
     </style>
   </head>
   <body>
+  <a href="?walletId=${walletIdFavorite}&bettorId=${bettorIdFavorite}">Bot favorite strategy</a>
+  <a href="?walletId=${walletIdJump}&bettorId=${bettorIdJump}">Bot jump strategy</a>
+  <br />
 Total gain: ${totalGain}
 Total loss: ${totalLoss}
 Rendement: ${roi * 100}%
