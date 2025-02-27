@@ -37,7 +37,7 @@ export namespace Bot {
     for (const { yes, no, id, title, endAt } of bets) {
       const currentCapital = await Wallet.balance(walletId)()
       console.log(`[BOT] current capital ${currentCapital}`)
-      const result = await Evaluator.evaluateWithJumpStrategy([], yes, no, currentCapital)
+      const result = await Evaluator.evaluateWithJumpStrategy([], currentCapital)
         .map(({ outcome, amountToBet }) =>
           BettorCommand.placeBet(bettorId)(id, title, endAt, outcome, outcome === 'yes' ? yes : no, amountToBet),
         )

@@ -1,60 +1,106 @@
 import { describe, expect, it } from 'bun:test'
+import { BetOutcome } from '../../market/index.validator'
 import { PolymarketPrice } from '../../market/infra/repository.validator'
 import { Amount, Percentage } from '../../utils/index.validator'
-import { decideFavorite } from './index'
+import { decideFavorite, decideJump } from './index'
 
-describe('Evaluator', () => {
-  it('should use half Kelly criterion when below cap', () => {
-    // When
+describe('decideFavorite', () => {
+  it('should calculate bet amount using half Kelly criterion when below cap', () => {
     const decision = decideFavorite(Percentage(0.9), PolymarketPrice(0.6), Amount(200))
 
-    // Then
     expect(decision.isOk()).toBe(true)
-    expect(decision.getOrThrow()).toEqual({ amountToBet: Amount(20) }) // 10% of 200 (cap is lower than half Kelly amount)
+    expect(decision.getOrThrow()).toEqual({ amountToBet: Amount(20) })
   })
 
-  it('should cap the bet at 10% of the bankroll', () => {
-    // When
+  it('should cap bet at 10% of bankroll when Kelly suggests higher', () => {
     const decision = decideFavorite(Percentage(0.9), PolymarketPrice(0.6), Amount(10000))
 
-    // Then
     expect(decision.isOk()).toBe(true)
-    expect(decision.getOrThrow()).toEqual({ amountToBet: Amount(1000) }) // 10% of 10000
+    expect(decision.getOrThrow()).toEqual({ amountToBet: Amount(1000) })
   })
 
-  it('should not take the bet if odds are bad', () => {
-    // When
+  it('should not take bet when odds are unfavorable', () => {
     const decision = decideFavorite(Percentage(0.1), PolymarketPrice(0.6), Amount(1000))
 
-    // Then
     expect(decision.isError()).toBe(true)
     expect(decision.error).toBe('unprofitable-bet')
   })
 
-  it('should not take the bet if unprofitable bet', () => {
-    // When
+  it('should not take bet when expected value is negative', () => {
     const decision = decideFavorite(Percentage(0.9), PolymarketPrice(0.95), Amount(1000))
 
-    // Then
     expect(decision.isError()).toBe(true)
     expect(decision.error).toBe('unprofitable-bet')
   })
 
-  it('should use half Kelly criterion with very small bankroll', () => {
-    // When
-    const decision = decideFavorite(Percentage(0.9), PolymarketPrice(0.6), Amount(100))
+  it('should round bet amount to nearest 10', () => {
+    const decision = decideFavorite(Percentage(0.9), PolymarketPrice(0.6), Amount(123))
 
-    // Then
     expect(decision.isOk()).toBe(true)
-    expect(decision.getOrThrow()).toEqual({ amountToBet: Amount(10) }) // Half Kelly: (0.9*0.4 - 0.1*0.6)/0.4/2 * 100 rounded to nearest 10
+    expect(decision.getOrThrow()).toEqual({ amountToBet: Amount(10) })
+  })
+})
+
+describe('decideJump', () => {
+  const now = new Date()
+  const threeMinutesAgo = new Date(now.getTime() - 3 * 60 * 1000)
+  const PRICE_JUMP_THRESHOLD = Percentage(0.05)
+  const MAX_BANKROLL_AMOUNT_TO_BET = Percentage(0.1)
+
+  it('should detect upward jump and bet yes', () => {
+    const priceHistory = [
+      { price: PolymarketPrice(0.5), date: threeMinutesAgo },
+      { price: PolymarketPrice(0.53), date: now },
+    ]
+
+    const decision = decideJump(MAX_BANKROLL_AMOUNT_TO_BET, PRICE_JUMP_THRESHOLD)(priceHistory, Amount(1000))
+
+    expect(decision.isOk()).toBe(true)
+    expect(decision.getOrThrow()).toEqual({
+      outcome: BetOutcome('yes'),
+      amountToBet: Amount(100),
+    })
   })
 
-  it('should apply 10% cap when half Kelly would exceed it', () => {
-    // When
-    const decision = decideFavorite(Percentage(0.9), PolymarketPrice(0.6), Amount(200))
+  it('should detect downward jump and bet no', () => {
+    const priceHistory = [
+      { price: PolymarketPrice(0.5), date: threeMinutesAgo },
+      { price: PolymarketPrice(0.47), date: now },
+    ]
 
-    // Then
+    const decision = decideJump(MAX_BANKROLL_AMOUNT_TO_BET, PRICE_JUMP_THRESHOLD)(priceHistory, Amount(1000))
+
     expect(decision.isOk()).toBe(true)
-    expect(decision.getOrThrow()).toEqual({ amountToBet: Amount(20) }) // 10% of 200 (cap is lower than half Kelly amount)
+    expect(decision.getOrThrow()).toEqual({
+      outcome: BetOutcome('no'),
+      amountToBet: Amount(100),
+    })
+  })
+
+  it('should not bet if price change is below threshold', () => {
+    const priceHistory = [
+      { price: PolymarketPrice(0.5), date: threeMinutesAgo },
+      { price: PolymarketPrice(0.51), date: now },
+    ]
+
+    const decision = decideJump(MAX_BANKROLL_AMOUNT_TO_BET, PRICE_JUMP_THRESHOLD)(priceHistory, Amount(1000))
+
+    expect(decision.isError()).toBe(true)
+    expect(decision.error).toBe('no-significant-jump')
+  })
+
+  it('should calculate bet amount as percentage of capital', () => {
+    const priceHistory = [
+      { price: PolymarketPrice(0.5), date: threeMinutesAgo },
+      { price: PolymarketPrice(0.53), date: now },
+    ]
+
+    const decision = decideJump(MAX_BANKROLL_AMOUNT_TO_BET, PRICE_JUMP_THRESHOLD)(priceHistory, Amount(2000))
+
+    expect(decision.isOk()).toBe(true)
+    expect(decision.getOrThrow()).toEqual({
+      outcome: BetOutcome('yes'),
+      amountToBet: Amount(200), // 10% of 2000
+    })
   })
 })

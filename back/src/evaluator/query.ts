@@ -1,15 +1,20 @@
-import { clamp } from 'lodash'
+import dayjs from 'dayjs'
+import { chain, clamp } from 'lodash'
 import { Result } from 'typescript-result'
-import type { BetOutcome as BetOutcomeType } from '../market/index.type'
 import { BetOutcome } from '../market/index.validator'
 import type { PolymarketPrice, PriceHistory } from '../market/infra/repository.type'
 import type { Amount as AmountType } from '../utils/index.type'
-import { Percentage } from '../utils/index.validator'
-import { decideFavorite } from './business-rules'
+import { Amount, Minute, Percentage } from '../utils/index.validator'
+import { decideFavorite, decideJump } from './business-rules'
 
 export namespace Evaluator {
+  const MINIMUM_BANKROLL = Amount(10)
+  const PRICE_JUMP_THRESHOLD = Percentage(0.05)
+  const MAX_BANKROLL_AMOUNT_TO_BET = Percentage(0.1)
+  const HISTORY_WINDOW = Minute(4)
+
   export const evaluateWithFavoriteStrategy = (yes: PolymarketPrice, no: PolymarketPrice, bankroll: AmountType) => {
-    if (bankroll < 10) return Result.error('funds-too-low' as const)
+    if (bankroll < MINIMUM_BANKROLL) return Result.error('funds-too-low' as const)
     const yesEstimation = Percentage(clamp(yes + 0.05, 0, 1))
     const noEstimation = Percentage(clamp(no + 0.05, 0, 1))
     if (yesEstimation > noEstimation) {
@@ -24,12 +29,16 @@ export namespace Evaluator {
     }))
   }
 
-  export const evaluateWithJumpStrategy = (
-    last5MinutesPriceHistory: PriceHistory[],
-    yes: PolymarketPrice,
-    no: PolymarketPrice,
-    currentCapital: AmountType,
-  ): Result<{ outcome: BetOutcomeType; amountToBet: AmountType }, string> => {
-    throw new Error('Not implemented')
+  export const evaluateWithJumpStrategy = (last5MinutesPriceHistory: PriceHistory[], currentCapital: AmountType) => {
+    if (currentCapital < MINIMUM_BANKROLL) return Result.error('funds-too-low' as const)
+    const cutoffTime = dayjs().subtract(HISTORY_WINDOW, 'minutes').toDate()
+    const recentHistory = chain(last5MinutesPriceHistory)
+      .filter(({ date }) => dayjs(date).isAfter(cutoffTime))
+      .sortBy(({ date }) => date)
+      .value()
+
+    if (recentHistory.length === 0) return Result.error('no-significant-jump' as const)
+    if (recentHistory.length < 2) return Result.error('insufficient-history' as const)
+    return decideJump(MAX_BANKROLL_AMOUNT_TO_BET, PRICE_JUMP_THRESHOLD)(last5MinutesPriceHistory, currentCapital)
   }
 }
