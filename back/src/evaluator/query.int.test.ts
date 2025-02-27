@@ -12,14 +12,13 @@ describe('Evaluate', () => {
     const totalCapital = Amount(1000)
 
     // When
-    const evaluation = Evaluator.evaluate(yes, no, totalCapital)
+    const evaluation = Evaluator.evaluateWithFavoriteStrategy(yes, no, totalCapital)
 
     // Then
     expect(evaluation.isOk()).toBe(true)
     expect(evaluation.getOrThrow()).toEqual({
       outcome: BetOutcome('yes'),
       amountToBet: Amount(120),
-      expectedGain: Amount(50),
     })
   })
 
@@ -30,14 +29,13 @@ describe('Evaluate', () => {
     const totalCapital = Amount(1000)
 
     // When
-    const evaluation = Evaluator.evaluate(yes, no, totalCapital)
+    const evaluation = Evaluator.evaluateWithFavoriteStrategy(yes, no, totalCapital)
 
     // Then
     expect(evaluation.isOk()).toBe(true)
     expect(evaluation.getOrThrow()).toEqual({
       outcome: BetOutcome('no'),
       amountToBet: Amount(220),
-      expectedGain: Amount(50),
     })
   })
 
@@ -48,7 +46,7 @@ describe('Evaluate', () => {
     const lowCapital = Amount(1)
 
     // When
-    const evaluation = Evaluator.evaluate(yes, no, lowCapital)
+    const evaluation = Evaluator.evaluateWithFavoriteStrategy(yes, no, lowCapital)
 
     // Then
     expect(evaluation.isError()).toBe(true)

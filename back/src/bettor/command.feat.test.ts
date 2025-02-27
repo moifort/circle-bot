@@ -6,7 +6,7 @@ import { PolymarketPrice } from '../market/infra/repository.validator'
 import { Market } from '../market/query'
 import { Amount } from '../utils/index.validator'
 import { BettorCommand } from './command'
-import { PlacedBetId } from './index.validator'
+import { BettorId, PlacedBetId } from './index.validator'
 import { PlacedBetRepository } from './infra/repository'
 import { BettorQuery } from './query'
 
@@ -26,54 +26,54 @@ describe('Bettor', () => {
     )
     await PlacedBetRepository.save($firestore)({
       id: PlacedBetId('bet-id'),
+      bettorId: BettorId('bettor-id'),
       status: 'pending',
       title: BetTitle('Trump will win the election'),
       outcome: 'yes',
       outcomePrice: PolymarketPrice(0.8),
       amountBet: Amount(100),
-      potentialGain: Amount(10),
       betEndAt: new Date(),
       placedAt: new Date(),
     })
 
     // When
-    await BettorCommand.updateAllPendingBet()
+    await BettorCommand.updateAllPendingBet(BettorId('bettor-id'))()
 
     // Then
-    expect(await PlacedBetRepository.findAll($firestore)('won')).toHaveLength(1)
+    expect(await PlacedBetRepository.findAll($firestore, BettorId('bettor-id'))('won')).toHaveLength(1)
   })
 
   it('redeemAllBets', async () => {
     // Given
     await PlacedBetRepository.save($firestore)({
       id: PlacedBetId('won-bet-id-01'),
+      bettorId: BettorId('bettor-id'),
       status: 'won' as const,
       title: BetTitle('Trump will win the election'),
       outcome: 'yes',
       outcomePrice: PolymarketPrice(0.8),
       amountBet: Amount(100),
-      potentialGain: Amount(10),
       betEndAt: new Date(),
       placedAt: new Date(),
     })
     await PlacedBetRepository.save($firestore)({
       id: PlacedBetId('won-bet-id-02'),
+      bettorId: BettorId('bettor-id'),
       status: 'won' as const,
       title: BetTitle('Trump will win the election'),
       outcome: 'yes',
       outcomePrice: PolymarketPrice(0.6),
       amountBet: Amount(200),
-      potentialGain: Amount(10),
       betEndAt: new Date(),
       placedAt: new Date(),
     })
 
     // When
-    const redeemAmount = await BettorCommand.redeemAllWonBets()
+    const redeemAmount = await BettorCommand.redeemAllWonBets(BettorId('bettor-id'))()
 
     // Then
     expect(redeemAmount).toBe(Amount(458))
-    expect(await BettorQuery.getGain()).toBe(Amount(158))
-    expect(await PlacedBetRepository.findAll($firestore)('redeemed')).toHaveLength(2)
+    expect(await BettorQuery.getGain(BettorId('bettor-id'))()).toBe(Amount(158))
+    expect(await PlacedBetRepository.findAll($firestore, BettorId('bettor-id'))('redeemed')).toHaveLength(2)
   })
 })

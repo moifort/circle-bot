@@ -1,56 +1,38 @@
 import { chain } from 'lodash'
 import { $firestore } from '../index'
+import type { BetId } from '../market/index.type'
 import type { Amount as AmountType } from '../utils/index.type'
 import { Amount, Percentage } from '../utils/index.validator'
-import { log } from '../utils/logger'
 import { Rules } from './business-rules'
+import type { BettorId } from './index.type'
 import { PlacedBetRepository } from './infra/repository'
 
-export class BettorQuery {
-  @log
-  static async getAllBets() {
-    return await PlacedBetRepository.findAll($firestore)('no-filter')
+export namespace BettorQuery {
+  export const getAllBets = (bettorId: BettorId) => async () => {
+    return await PlacedBetRepository.findAll($firestore, bettorId)('no-filter')
   }
 
-  @log
-  static async getGain() {
-    const winningBets = await PlacedBetRepository.findAll($firestore)('redeemed')
+  export const getGain = (bettorId: BettorId) => async () => {
+    const winningBets = await PlacedBetRepository.findAll($firestore, bettorId)('redeemed')
     return Rules.totalGain(winningBets)
   }
 
-  @log
-  static async getReturnOnInvestment(initialAmount: AmountType) {
-    const [gain, loss] = await Promise.all([BettorQuery.getGain(), BettorQuery.getLoss()])
+  export const getReturnOnInvestment = (bettorId: BettorId) => async (initialAmount: AmountType) => {
+    const [gain, loss] = await Promise.all([BettorQuery.getGain(bettorId)(), BettorQuery.getLoss(bettorId)()])
     const netGain = gain - loss
     const percentageReturn = netGain / initialAmount
     return Percentage(percentageReturn)
   }
 
-  @log
-  static async getEstimatedGain() {
-    const redeemedBets = await PlacedBetRepository.findAll($firestore)('redeemed')
-    const lostBets = await PlacedBetRepository.findAll($firestore)('lost')
-    const gain = chain([...lostBets, ...redeemedBets])
-      .sumBy(({ potentialGain }) => potentialGain)
-      .value()
-    return Amount(gain)
-  }
-
-  @log
-  static async getComingEstimatedGain() {
-    const pendingBets = await PlacedBetRepository.findAll($firestore)('pending')
-    const gain = chain(pendingBets)
-      .sumBy(({ potentialGain }) => potentialGain)
-      .value()
-    return Amount(gain)
-  }
-
-  @log
-  static async getLoss() {
-    const lostBets = await PlacedBetRepository.findAll($firestore)('lost')
+  export const getLoss = (bettorId: BettorId) => async () => {
+    const lostBets = await PlacedBetRepository.findAll($firestore, bettorId)('lost')
     const lost = chain(lostBets)
       .sumBy(({ amountBet }) => amountBet)
       .value()
     return Amount(lost)
+  }
+
+  export const getCurrentPlacedBets = (id: BettorId) => async (): Promise<BetId[]> => {
+    throw new Error('Not implemented')
   }
 }

@@ -9,6 +9,10 @@
           "order": "ASCENDING"
         },
         {
+          "fieldPath": "bettorId",
+          "order": "ASCENDING"
+        },
+        {
           "fieldPath": "betEndAt",
           "order": "ASCENDING"
         }

@@ -1,46 +1,54 @@
 import { BettorCommand } from '../bettor/command'
+import type { BettorId } from '../bettor/index.type'
+import { BettorQuery } from '../bettor/query'
 import { Evaluator } from '../evaluator/query'
-import type { OpenBet } from '../market/index.type'
 import { Market } from '../market/query'
-import type { Amount as AmountType } from '../utils/index.type'
-import { log } from '../utils/logger'
+import type { WalletId } from '../wallet/index.type'
 import { TransactionDescription } from '../wallet/index.validator'
 import { Wallet } from '../wallet/query'
 
-export class Bot {
-  @log
-  static async run() {
-    console.log('[BOT] Start placing bets')
+export namespace Bot {
+  export const runWithFavoriteStrategy = async (bettorId: BettorId, walletId: WalletId) => {
     const bets = await Market.getLatestOpenBets()
-    for (const bet of bets) {
-      const currentCapital = await Wallet.balance()
-      console.log(`[BOT] current capital ${currentCapital}`)
-      const result = await Bot.placeBet(bet, currentCapital)
+    for (const { id, title, endAt, yes, no } of bets) {
+      const currentCapital = await Wallet.balance(walletId)()
+      const result = await Evaluator.evaluateWithFavoriteStrategy(yes, no, currentCapital)
+        .map(({ outcome, amountToBet }) =>
+          BettorCommand.placeBet(bettorId)(id, title, endAt, outcome, outcome === 'yes' ? yes : no, amountToBet),
+        )
+        .map(({ amountBet }) =>
+          Wallet.withdraw(walletId)(amountBet, TransactionDescription({ betId: id, betTitle: title })),
+        )
       if (result.isError() && ['funds-too-low', 'insufficient-funds'].includes(result.error)) {
-        console.log(`[BOT] Stopped because ${result.error}: ${await Wallet.balance()}`)
+        console.log(`[BOT] Stopped because ${result.error}: ${currentCapital}`)
         return
       }
       if (result.isError()) console.error(`[BOT] ${result.error}, continuing...`)
     }
-    console.log(`[BOT] Placing bet completed! Analyzing ${bets.length} bets, current balance ${await Wallet.balance()}`)
-    console.log('[BOT] Start updating bets')
-    await BettorCommand.updateAllPendingBet()
-    console.log('[BOT] Update placed bet status completed!')
-    console.log('[BOT] Start redeeming bets')
-    const redeemedAmount = await BettorCommand.redeemAllWonBets()
-    if (redeemedAmount > 0) await Wallet.deposit(redeemedAmount, TransactionDescription('redeem'))
-    console.log(`[BOT] Redeem completed! Amount: ${redeemedAmount}`)
+    await BettorCommand.updateAllPendingBet(bettorId)()
+    const redeemedAmount = await BettorCommand.redeemAllWonBets(bettorId)()
+    if (redeemedAmount > 0) await Wallet.deposit(walletId)(redeemedAmount, TransactionDescription('redeem'))
   }
 
-  static async placeBet({ id, title, yes, no, endAt }: OpenBet, currentCapital: AmountType) {
-    return Evaluator.evaluate(yes, no, currentCapital)
-      .map((evaluation) =>
-        Wallet.withdraw(evaluation.amountToBet, TransactionDescription({ betId: id, betTitle: title })).then(
-          () => evaluation,
-        ),
-      )
-      .map(({ outcome, amountToBet, expectedGain }) =>
-        BettorCommand.placeBet(id, title, endAt, outcome, outcome === 'yes' ? yes : no, amountToBet, expectedGain),
-      )
+  export const runWithJumpStrategy = async (bettorId: BettorId, walletId: WalletId) => {
+    console.log('[BOT] Start placing bets')
+    const placedBetIds = await BettorQuery.getCurrentPlacedBets(bettorId)()
+    const bets = await Market.getOpenBetsWithPriceHistory(placedBetIds)
+    for (const { yes, no, id, title, endAt } of bets) {
+      const currentCapital = await Wallet.balance(walletId)()
+      console.log(`[BOT] current capital ${currentCapital}`)
+      const result = await Evaluator.evaluateWithJumpStrategy([], yes, no, currentCapital)
+        .map(({ outcome, amountToBet }) =>
+          BettorCommand.placeBet(bettorId)(id, title, endAt, outcome, outcome === 'yes' ? yes : no, amountToBet),
+        )
+        .map(({ amountBet }) =>
+          Wallet.withdraw(walletId)(amountBet, TransactionDescription({ betId: id, betTitle: title })),
+        )
+      if (result.isError() && ['funds-too-low', 'insufficient-funds'].includes(result.error)) {
+        console.log(`[BOT] Stopped because ${result.error}: ${currentCapital}`)
+        return
+      }
+      if (result.isError()) console.error(`[BOT] ${result.error}, continuing...`)
+    }
   }
 }

@@ -5,3 +5,4 @@ export type PolymarketEvent = typeof event
 export type PolymarketResponse = { data: PolymarketEvent[] }
 
 export type PolymarketPrice = Brand<number, 'PolymarketPrice'>
+export type PriceHistory = { price: PolymarketPrice; date: Date }
