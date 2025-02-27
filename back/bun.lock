@@ -25,6 +25,7 @@
         "@biomejs/biome": "1.9.4",
         "@eslint/js": "9.21.0",
         "@firebase/rules-unit-testing": "4.0.1",
+        "@json2csv/node": "7.0.6",
         "@types/bun": "1.2.3",
         "@types/lodash": "4.17.15",
         "firebase-functions-test": "3.4.0",
@@ -381,6 +382,12 @@
 
     "@js-sdsl/ordered-map": ["@js-sdsl/ordered-map@4.4.2", "", {}, "sha512-iUKgm52T8HOE/makSxjqoWhe95ZJA1/G1sYsGev2JDKUSS14KAgg1LHb+Ba+IPow0xflbnSkOsZcO08C7w1gYw=="],
 
+    "@json2csv/formatters": ["@json2csv/formatters@7.0.6", "", {}, "sha512-hjIk1H1TR4ydU5ntIENEPgoMGW+Q7mJ+537sDFDbsk+Y3EPl2i4NfFVjw0NJRgT+ihm8X30M67mA8AS6jPidSA=="],
+
+    "@json2csv/node": ["@json2csv/node@7.0.6", "", { "dependencies": { "@json2csv/plainjs": "^7.0.6" } }, "sha512-J3AX8cDBeQyriJj0oFxJot52hScUN4hhUBRnUGIPt+yI1YpwUuftriJi1RJS60Uz6Stce1sewHeG56dBc9/XGg=="],
+
+    "@json2csv/plainjs": ["@json2csv/plainjs@7.0.6", "", { "dependencies": { "@json2csv/formatters": "^7.0.6", "@streamparser/json": "^0.0.20" } }, "sha512-4Md7RPDCSYpmW1HWIpWBOqCd4vWfIqm53S3e/uzQ62iGi7L3r34fK/8nhOMEe+/eVfCx8+gdSCt1d74SlacQHw=="],
+
     "@metamask/eth-sig-util": ["@metamask/eth-sig-util@5.1.0", "", { "dependencies": { "@ethereumjs/util": "^8.0.6", "bn.js": "^4.12.0", "ethereum-cryptography": "^2.0.0", "ethjs-util": "^0.1.6", "tweetnacl": "^1.0.3", "tweetnacl-util": "^0.15.1" } }, "sha512-mlgziIHYlA9pi/XZerChqg4NocdOgBPB9NmxgXWQO2U2hH8RGOJQrz6j/AIKkYxgCMIE2PY000+joOwXfzeTDQ=="],
 
     "@noble/curves": ["@noble/curves@1.4.2", "", { "dependencies": { "@noble/hashes": "1.4.0" } }, "sha512-TavHr8qycMChk8UwMld0ZDRvatedkzWfH8IiaeGCfymOP5i0hSCozz9vHOL0nkwk7HRMlFnAiKpS2jrUmSybcw=="],
@@ -430,6 +437,8 @@
     "@sinonjs/commons": ["@sinonjs/commons@3.0.1", "", { "dependencies": { "type-detect": "4.0.8" } }, "sha512-K3mCHKQ9sVh8o1C9cxkwxaOmXoAMlDxC1mYyHrjqOWEcBjYr76t96zL2zlj5dUGZ3HSw240X1qgH3Mjf1yJWpQ=="],
 
     "@sinonjs/fake-timers": ["@sinonjs/fake-timers@10.3.0", "", { "dependencies": { "@sinonjs/commons": "^3.0.0" } }, "sha512-V4BG07kuYSUkTCSBHG8G8TNhM+F19jXFWnQtzj+we8DrkpSBCee9Z3Ms8yiGer/dlmhe35/Xdgyo3/0rQKg7YA=="],
+
+    "@streamparser/json": ["@streamparser/json@0.0.20", "", {}, "sha512-VqAAkydywPpkw63WQhPVKCD3SdwXuihCUVZbbiY3SfSTGQyHmwRoq27y4dmJdZuJwd5JIlQoMPyGvMbUPY0RKQ=="],
 
     "@tootallnate/once": ["@tootallnate/once@2.0.0", "", {}, "sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A=="],
 
