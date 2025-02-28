@@ -47,14 +47,19 @@ export const botJump = process.env.FUNCTIONS_EMULATOR
 export const summarize = onRequest(async (request, response) => {
   const bettorId = BettorId(request.query.bettorId?.toString() ?? bettorIdFavorite)
   const walletId = WalletId(request.query.walletId?.toString() ?? walletIdFavorite)
-  const [roi, totalLoss, totalGain, placedBets, transactions, balance] = await Promise.all([
-    BettorQuery.getReturnOnInvestment(bettorId)(Amount(1000)),
-    BettorQuery.getLoss(bettorId)(),
-    BettorQuery.getGain(bettorId)(),
-    BettorQuery.getAllBets(bettorId)(),
-    Wallet.history(walletId)(),
-    Wallet.balance(walletId)(),
-  ])
+
+  const initialDeposit = Amount(1000)
+  const [performance, totalNetGain, totalLoss, totalGain, bankroll, placedBets, transactions, balance] =
+    await Promise.all([
+      BettorQuery.getPerformance(bettorId)(initialDeposit),
+      BettorQuery.getTotalNetGain(bettorId)(),
+      BettorQuery.getTotalLoss(bettorId)(),
+      BettorQuery.getTotalGain(bettorId)(),
+      BettorQuery.getBankroll(bettorId)(initialDeposit),
+      BettorQuery.getAllBets(bettorId)(),
+      Wallet.history(walletId)(),
+      Wallet.balance(walletId)(),
+    ])
   response.status(200).send(`
 <!DOCTYPE html>
 <html lang="fr">
@@ -70,15 +75,17 @@ export const summarize = onRequest(async (request, response) => {
   <a href="?walletId=${walletIdFavorite}&bettorId=${bettorIdFavorite}">Bot favorite strategy</a>
   <a href="?walletId=${walletIdJump}&bettorId=${bettorIdJump}">Bot jump strategy</a>
   <br />
+Bankroll: ${bankroll}
+Total net gain: ${totalNetGain}
 Total gain: ${totalGain}
 Total loss: ${totalLoss}
-Rendement: ${roi * 100}%
-Actual balance: ${balance}  (Initial balance: 1000)
+Performance: ${performance * 100}%
+Actual balance: ${balance}  (Initial balance: ${initialDeposit})
 <br>
 Placed bets
 ${toTable(placedBets)}
 
-Wallet transactions history
+Wallet history
 ${toTable(transactions)}
   </body>
 </html>

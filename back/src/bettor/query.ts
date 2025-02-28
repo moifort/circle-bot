@@ -12,12 +12,12 @@ export namespace BettorQuery {
     return await PlacedBetRepository.findAll($firestore, bettorId)('no-filter')
   }
 
-  export const getGain = (bettorId: BettorId) => async () => {
+  export const getTotalGain = (bettorId: BettorId) => async () => {
     const winningBets = await PlacedBetRepository.findAll($firestore, bettorId)('redeemed')
     return Rules.totalGain(winningBets)
   }
 
-  export const getLoss = (bettorId: BettorId) => async () => {
+  export const getTotalLoss = (bettorId: BettorId) => async () => {
     const lostBets = await PlacedBetRepository.findAll($firestore, bettorId)('lost')
     const lost = chain(lostBets)
       .sumBy(({ amountBet }) => amountBet)
@@ -25,18 +25,18 @@ export namespace BettorQuery {
     return Amount(lost)
   }
 
-  export const getNetGain = (bettorId: BettorId) => async () => {
-    const [gain, loss] = await Promise.all([BettorQuery.getGain(bettorId)(), BettorQuery.getLoss(bettorId)()])
+  export const getTotalNetGain = (bettorId: BettorId) => async () => {
+    const [gain, loss] = await Promise.all([BettorQuery.getTotalGain(bettorId)(), BettorQuery.getTotalLoss(bettorId)()])
     return Rules.totalNetGain(gain, loss)
   }
 
   export const getBankroll = (bettorId: BettorId) => async (initialAmount: AmountType) => {
-    const [gain, loss] = await Promise.all([BettorQuery.getGain(bettorId)(), BettorQuery.getLoss(bettorId)()])
+    const [gain, loss] = await Promise.all([BettorQuery.getTotalGain(bettorId)(), BettorQuery.getTotalLoss(bettorId)()])
     return Rules.bankroll(initialAmount, gain, loss)
   }
 
-  export const getReturnOnInvestment = (bettorId: BettorId) => async (initialAmount: AmountType) => {
-    const [gain, loss] = await Promise.all([BettorQuery.getGain(bettorId)(), BettorQuery.getLoss(bettorId)()])
+  export const getPerformance = (bettorId: BettorId) => async (initialAmount: AmountType) => {
+    const [gain, loss] = await Promise.all([BettorQuery.getTotalGain(bettorId)(), BettorQuery.getTotalLoss(bettorId)()])
     const netGain = gain - loss
     const percentageReturn = netGain / initialAmount
     return Percentage(percentageReturn)

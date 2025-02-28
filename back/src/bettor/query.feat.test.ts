@@ -55,7 +55,7 @@ describe('Bettor', () => {
     })
 
     // When
-    const total = await BettorQuery.getReturnOnInvestment(BettorId('bettor-id'))(Amount(200))
+    const total = await BettorQuery.getPerformance(BettorId('bettor-id'))(Amount(200))
 
     // Then
     expect(total).toBe(Percentage(0.075))
@@ -87,7 +87,7 @@ describe('Bettor', () => {
     })
 
     // When
-    const total = await BettorQuery.getGain(BettorId('bettor-id'))()
+    const total = await BettorQuery.getTotalGain(BettorId('bettor-id'))()
 
     // Then
     expect(total).toBe(Amount(50))
@@ -108,7 +108,7 @@ describe('Bettor', () => {
     })
 
     // When
-    const total = await BettorQuery.getLoss(BettorId('bettor-id'))()
+    const total = await BettorQuery.getTotalLoss(BettorId('bettor-id'))()
 
     // Then
     expect(total).toBe(Amount(100))
@@ -140,7 +140,7 @@ describe('Bettor', () => {
     })
 
     // When
-    const netGain = await BettorQuery.getNetGain(BettorId('bettor-id'))()
+    const netGain = await BettorQuery.getTotalNetGain(BettorId('bettor-id'))()
 
     // Then
     expect(netGain).toBe(Amount(15)) // (100 * 0.25) - 10 = 15
