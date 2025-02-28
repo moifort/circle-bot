@@ -58,12 +58,17 @@ export namespace GammaApiRepository {
   }
 
   export const findHistoryPrices = async (marketId: MarketIdType, from: Date, to: Date) => {
-    const response = await fetch(
-      `https://clob.polymarket.com/prices-history?startTs=${Math.floor(from.getTime() / 1000)}&endTs=${Math.floor(to.getTime() / 1000)}&market=${marketId}&fidelity=1`,
-    )
-    const { history } = (await response.json()) as PolymarketPriceHistory
-    return chain(history)
-      .map<PriceHistory>(({ t, p }) => ({ date: dayjs.unix(t).toDate(), price: PolymarketPrice(p) }))
-      .value()
+    try {
+      const response = await fetch(
+        `https://clob.polymarket.com/prices-history?startTs=${Math.floor(from.getTime() / 1000)}&endTs=${Math.floor(to.getTime() / 1000)}&market=${marketId}&fidelity=1`,
+      )
+      const { history } = (await response.json()) as PolymarketPriceHistory
+      return chain(history)
+        .map<PriceHistory>(({ t, p }) => ({ date: dayjs.unix(t).toDate(), price: PolymarketPrice(p) }))
+        .value()
+    } catch (e) {
+      console.log('Ban from API')
+      return []
+    }
   }
 }

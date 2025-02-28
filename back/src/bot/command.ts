@@ -18,22 +18,15 @@ export namespace Bot {
     for (const { id, title, endAt, yes, no } of bets) {
       const bankroll = await BettorQuery.getBankroll(bettorId)(INITIAL_DEPOSIT)
       const evaluation = Evaluator.evaluateWithFavoriteStrategy(yes, no, bankroll)
-      if (evaluation.isError()) return Result.error(evaluation.error)
+      if (evaluation.error === 'funds-too-low') return Result.error(evaluation.error)
+      if (evaluation.error === 'unprofitable-bet') continue
       const { outcome, amountToBet } = evaluation.getOrThrow()
       const { error } = await Wallet.withdraw(walletId)(
         amountToBet,
         TransactionDescription({ betId: id, betTitle: title }),
       )
-      if (error) return Result.error(evaluation.error)
-      const placedBet = await BettorCommand.placeBet(bettorId)(
-        id,
-        title,
-        endAt,
-        outcome,
-        outcome === 'yes' ? yes : no,
-        amountToBet,
-      )
-      if (placedBet.isError()) console.error(`${placedBet.error}, continuing...`)
+      if (error === 'insufficient-funds') return Result.error(evaluation.error)
+      await BettorCommand.placeBet(bettorId)(id, title, endAt, outcome, outcome === 'yes' ? yes : no, amountToBet)
     }
     await BettorCommand.updateAllPendingBet(bettorId)()
     const redeemedAmount = await BettorCommand.redeemAllWonBets(bettorId)()
@@ -43,26 +36,20 @@ export namespace Bot {
 
   export const runWithJumpStrategy = async (bettorId: BettorId, walletId: WalletId) => {
     const placedBetIds = await BettorQuery.getCurrentPlacedBets(bettorId)()
-    const bets = await Market.getOpenBetsWithPriceHistory(placedBetIds, Limit(100))
-    for (const { yes, no, id, title, endAt } of bets) {
+    const bets = await Market.getOpenBetsWithPriceHistory(placedBetIds, Limit(200))
+    for (const { yes, no, id, title, endAt, priceHistory } of bets) {
       const bankroll = await BettorQuery.getBankroll(bettorId)(INITIAL_DEPOSIT)
-      const evaluation = Evaluator.evaluateWithJumpStrategy(yes, no, bankroll)
-      if (evaluation.isError()) return Result.error(evaluation.error)
+      const evaluation = Evaluator.evaluateWithJumpStrategy(priceHistory, bankroll)
+      if (evaluation.error === 'funds-too-low') return Result.error(evaluation.error)
+      if (evaluation.error === 'unprofitable-bet') continue
+      if (evaluation.error === 'insufficient-history') continue
       const { outcome, amountToBet } = evaluation.getOrThrow()
       const { error } = await Wallet.withdraw(walletId)(
         amountToBet,
         TransactionDescription({ betId: id, betTitle: title }),
       )
-      if (error) return Result.error(evaluation.error)
-      const placedBet = await BettorCommand.placeBet(bettorId)(
-        id,
-        title,
-        endAt,
-        outcome,
-        outcome === 'yes' ? yes : no,
-        amountToBet,
-      )
-      if (placedBet.isError()) console.error(`${placedBet.error}, continuing...`)
+      if (error === 'insufficient-funds') return Result.error(evaluation.error)
+      await BettorCommand.placeBet(bettorId)(id, title, endAt, outcome, outcome === 'yes' ? yes : no, amountToBet)
     }
     return Result.ok()
   }

@@ -8,7 +8,7 @@ describe('Bot', () => {
     await Bot.runWithFavoriteStrategy(BettorId('bettor-id'), WalletId('wallet-id'))
   })
 
-  it.skip('should run jump strategy', async () => {
+  it('should run jump strategy', async () => {
     await Bot.runWithJumpStrategy(BettorId('bettor-id'), WalletId('wallet-id'))
   })
 })
