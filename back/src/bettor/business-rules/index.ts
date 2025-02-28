@@ -18,8 +18,8 @@ export namespace Rules {
   export const gain = (outcomePrice: PolymarketPrice, amountBet: AmountType) =>
     Amount(amountBet / outcomePrice - amountBet)
 
-  export const totalNetGain = (gain: AmountType, loss: AmountType) => {
-    const net = floor(Math.max(gain - loss, 0))
-    return Amount(net)
-  }
+  export const totalNetGain = (gain: AmountType, loss: AmountType) => Amount(floor(Math.max(gain - loss, 0)))
+
+  export const bankroll = (initialAmount: AmountType, gain: AmountType, loss: AmountType) =>
+    Amount(floor(Math.max(initialAmount + gain - loss, 0)))
 }

@@ -30,7 +30,10 @@ export namespace BettorQuery {
     return Rules.totalNetGain(gain, loss)
   }
 
-  export const getBankroll = (bettorId: BettorId) => async () => {}
+  export const getBankroll = (bettorId: BettorId) => async (initialAmount: AmountType) => {
+    const [gain, loss] = await Promise.all([BettorQuery.getGain(bettorId)(), BettorQuery.getLoss(bettorId)()])
+    return Rules.bankroll(initialAmount, gain, loss)
+  }
 
   export const getReturnOnInvestment = (bettorId: BettorId) => async (initialAmount: AmountType) => {
     const [gain, loss] = await Promise.all([BettorQuery.getGain(bettorId)(), BettorQuery.getLoss(bettorId)()])

@@ -78,3 +78,44 @@ describe('totalNetGain', () => {
     expect(totalNetGain).toBe(Amount(30)) // 50.75 - 20.25 = 30.5 -> floor to 30
   })
 })
+
+describe('bankroll', () => {
+  it('should return initial amount plus net gain', () => {
+    // Given
+    const initialAmount = Amount(100)
+    const gain = Amount(50)
+    const loss = Amount(20)
+
+    // When
+    const bankroll = Rules.bankroll(initialAmount, gain, loss)
+
+    // Then
+    expect(bankroll).toBe(Amount(130)) // 100 + 50 - 20 = 130
+  })
+
+  it('should return 0 when losses exceed total', () => {
+    // Given
+    const initialAmount = Amount(100)
+    const gain = Amount(50)
+    const loss = Amount(200)
+
+    // When
+    const bankroll = Rules.bankroll(initialAmount, gain, loss)
+
+    // Then
+    expect(bankroll).toBe(Amount(0))
+  })
+
+  it('should floor decimal results', () => {
+    // Given
+    const initialAmount = Amount(100.5)
+    const gain = Amount(50.75)
+    const loss = Amount(20.25)
+
+    // When
+    const bankroll = Rules.bankroll(initialAmount, gain, loss)
+
+    // Then
+    expect(bankroll).toBe(Amount(131)) // 100.5 + 50.75 - 20.25 = 131
+  })
+})

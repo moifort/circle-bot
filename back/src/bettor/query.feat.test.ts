@@ -145,4 +145,36 @@ describe('Bettor', () => {
     // Then
     expect(netGain).toBe(Amount(15)) // (100 * 0.25) - 10 = 15
   })
+
+  it('getBankroll', async () => {
+    // Given
+    await PlacedBetRepository.save($firestore)({
+      id: PlacedBetId('winning-bet'),
+      bettorId: BettorId('bettor-id'),
+      status: 'redeemed' as const,
+      title: BetTitle('Winning bet'),
+      outcome: 'yes',
+      outcomePrice: PolymarketPrice(0.8),
+      amountBet: Amount(100),
+      betEndAt: new Date(),
+      placedAt: new Date(),
+    })
+    await PlacedBetRepository.save($firestore)({
+      id: PlacedBetId('losing-bet'),
+      bettorId: BettorId('bettor-id'),
+      status: 'lost' as const,
+      title: BetTitle('Losing bet'),
+      outcome: 'no',
+      outcomePrice: PolymarketPrice(0.8),
+      amountBet: Amount(10),
+      betEndAt: new Date(),
+      placedAt: new Date(),
+    })
+
+    // When
+    const bankroll = await BettorQuery.getBankroll(BettorId('bettor-id'))(Amount(200))
+
+    // Then
+    expect(bankroll).toBe(Amount(215)) // 200 + (100 * 0.25) - 10 = 215
+  })
 })
