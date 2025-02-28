@@ -1,4 +1,4 @@
-import { chain } from 'lodash'
+import { chain, floor } from 'lodash'
 import type { PolymarketPrice } from '../../market/infra/repository.type'
 import type { Amount as AmountType } from '../../utils/index.type'
 import { Amount } from '../../utils/index.validator'
@@ -17,4 +17,9 @@ export namespace Rules {
 
   export const gain = (outcomePrice: PolymarketPrice, amountBet: AmountType) =>
     Amount(amountBet / outcomePrice - amountBet)
+
+  export const totalNetGain = (gain: AmountType, loss: AmountType) => {
+    const net = floor(Math.max(gain - loss, 0))
+    return Amount(net)
+  }
 }

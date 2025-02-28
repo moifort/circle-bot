@@ -28,3 +28,53 @@ describe('totalGain', () => {
     expect(total).toBe(Amount(0))
   })
 })
+
+describe('totalNetGain', () => {
+  it('should return positive net gain when gain exceeds loss', () => {
+    // Given
+    const gain = Amount(50)
+    const loss = Amount(30)
+
+    // When
+    const totalNetGain = Rules.totalNetGain(gain, loss)
+
+    // Then
+    expect(totalNetGain).toBe(Amount(20))
+  })
+
+  it('should return 0 when loss equals gain', () => {
+    // Given
+    const gain = Amount(50)
+    const loss = Amount(50)
+
+    // When
+    const totalNetGain = Rules.totalNetGain(gain, loss)
+
+    // Then
+    expect(totalNetGain).toBe(Amount(0))
+  })
+
+  it('should return 0 when loss exceeds gain', () => {
+    // Given
+    const gain = Amount(30)
+    const loss = Amount(50)
+
+    // When
+    const totalNetGain = Rules.totalNetGain(gain, loss)
+
+    // Then
+    expect(totalNetGain).toBe(Amount(0))
+  })
+
+  it('should floor decimal results', () => {
+    // Given
+    const gain = Amount(50.75)
+    const loss = Amount(20.25)
+
+    // When
+    const totalNetGain = Rules.totalNetGain(gain, loss)
+
+    // Then
+    expect(totalNetGain).toBe(Amount(30)) // 50.75 - 20.25 = 30.5 -> floor to 30
+  })
+})

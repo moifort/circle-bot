@@ -17,19 +17,26 @@ export namespace BettorQuery {
     return Rules.totalGain(winningBets)
   }
 
-  export const getReturnOnInvestment = (bettorId: BettorId) => async (initialAmount: AmountType) => {
-    const [gain, loss] = await Promise.all([BettorQuery.getGain(bettorId)(), BettorQuery.getLoss(bettorId)()])
-    const netGain = gain - loss
-    const percentageReturn = netGain / initialAmount
-    return Percentage(percentageReturn)
-  }
-
   export const getLoss = (bettorId: BettorId) => async () => {
     const lostBets = await PlacedBetRepository.findAll($firestore, bettorId)('lost')
     const lost = chain(lostBets)
       .sumBy(({ amountBet }) => amountBet)
       .value()
     return Amount(lost)
+  }
+
+  export const getNetGain = (bettorId: BettorId) => async () => {
+    const [gain, loss] = await Promise.all([BettorQuery.getGain(bettorId)(), BettorQuery.getLoss(bettorId)()])
+    return Rules.totalNetGain(gain, loss)
+  }
+
+  export const getBankroll = (bettorId: BettorId) => async () => {}
+
+  export const getReturnOnInvestment = (bettorId: BettorId) => async (initialAmount: AmountType) => {
+    const [gain, loss] = await Promise.all([BettorQuery.getGain(bettorId)(), BettorQuery.getLoss(bettorId)()])
+    const netGain = gain - loss
+    const percentageReturn = netGain / initialAmount
+    return Percentage(percentageReturn)
   }
 
   export const getCurrentPlacedBets = (id: BettorId) => async (): Promise<BetId[]> => {
