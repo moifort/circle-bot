@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test'
+import { Limit } from '../utils/index.validator'
 import { BetId, BetOutcome } from './index.validator'
 import { Market } from './query'
-import { Limit } from '../utils/index.validator'
 
 describe('Market', () => {
   it('getLatestOpenBets', async () => {
