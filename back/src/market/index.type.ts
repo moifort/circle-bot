@@ -5,6 +5,8 @@ export type BetId = Brand<string, 'BetId'>
 export type BetTitle = Brand<string, 'BetTitle'>
 export type BetDescription = Brand<string, 'BetDescription'>
 export type BetOutcome = 'yes' | 'no'
+export type MarketId = Brand<string, 'MarketId'>
+
 export type ClosedBet = {
   id: BetId
   status: 'closed'
