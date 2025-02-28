@@ -50,7 +50,7 @@ describe('decideJump', () => {
   it('should detect upward jump and bet yes', () => {
     const priceHistory = [
       { price: PolymarketPrice(0.5), date: threeMinutesAgo },
-      { price: PolymarketPrice(0.53), date: now },
+      { price: PolymarketPrice(0.55), date: now },
     ]
 
     const decision = decideJump(MAX_BANKROLL_AMOUNT_TO_BET, PRICE_JUMP_THRESHOLD)(priceHistory, Amount(1000))
@@ -65,7 +65,7 @@ describe('decideJump', () => {
   it('should detect downward jump and bet no', () => {
     const priceHistory = [
       { price: PolymarketPrice(0.5), date: threeMinutesAgo },
-      { price: PolymarketPrice(0.47), date: now },
+      { price: PolymarketPrice(0.449), date: now },
     ]
 
     const decision = decideJump(MAX_BANKROLL_AMOUNT_TO_BET, PRICE_JUMP_THRESHOLD)(priceHistory, Amount(1000))
