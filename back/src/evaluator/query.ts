@@ -36,9 +36,7 @@ export namespace Evaluator {
       .filter(({ date }) => dayjs(date).isAfter(cutoffTime))
       .sortBy(({ date }) => date)
       .value()
-
-    if (recentHistory.length === 0) return Result.error('no-significant-jump' as const)
-    if (recentHistory.length < 2) return Result.error('insufficient-history' as const)
+    if (recentHistory.length === 0 || recentHistory.length < 2) return Result.error('insufficient-history' as const)
     return decideJump(MAX_BANKROLL_AMOUNT_TO_BET, PRICE_JUMP_THRESHOLD)(last5MinutesPriceHistory, currentCapital)
   }
 }

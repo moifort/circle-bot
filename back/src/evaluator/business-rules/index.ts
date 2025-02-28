@@ -22,8 +22,8 @@ export const decideFavorite = (estimatedProbability: PercentageType, price: Poly
 export const decideJump =
   (bankrollPercentage: PercentageType, jumpThreshold: PercentageType) =>
   (recentHistory: PriceHistory[], currentCapital: AmountType) => {
-    const oldestPrice = first(recentHistory)?.price ?? 0
-    const latestPrice = last(recentHistory)?.price ?? 0
+    const oldestPrice = first(recentHistory)!.price
+    const latestPrice = last(recentHistory)!.price
     const progression = (latestPrice - oldestPrice) / oldestPrice
 
     if (Math.abs(progression) >= jumpThreshold) {

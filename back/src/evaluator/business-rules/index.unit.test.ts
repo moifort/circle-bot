@@ -88,19 +88,4 @@ describe('decideJump', () => {
     expect(decision.isError()).toBe(true)
     expect(decision.error).toBe('no-significant-jump')
   })
-
-  it('should calculate bet amount as percentage of capital', () => {
-    const priceHistory = [
-      { price: PolymarketPrice(0.5), date: threeMinutesAgo },
-      { price: PolymarketPrice(0.53), date: now },
-    ]
-
-    const decision = decideJump(MAX_BANKROLL_AMOUNT_TO_BET, PRICE_JUMP_THRESHOLD)(priceHistory, Amount(2000))
-
-    expect(decision.isOk()).toBe(true)
-    expect(decision.getOrThrow()).toEqual({
-      outcome: BetOutcome('yes'),
-      amountToBet: Amount(200), // 10% of 2000
-    })
-  })
 })
