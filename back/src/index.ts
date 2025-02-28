@@ -11,6 +11,7 @@ import { Amount } from './utils/index.validator'
 import { toTable } from './utils/pretty'
 import { WalletId } from './wallet/index.validator'
 import { Wallet } from './wallet/query'
+import { floor } from 'lodash'
 
 const app = initializeApp()
 export const $firestore = getFirestore(app)
@@ -75,12 +76,12 @@ export const summarize = onRequest(async (request, response) => {
   <a href="?walletId=${walletIdFavorite}&bettorId=${bettorIdFavorite}">Bot favorite strategy</a>
   <a href="?walletId=${walletIdJump}&bettorId=${bettorIdJump}">Bot jump strategy</a>
   <br />
-Bankroll: ${bankroll}
-Total net gain: ${totalNetGain}
-Total gain: ${totalGain}
-Total loss: ${totalLoss}
-Performance: ${performance * 100}%
-Actual balance: ${balance}  (Initial balance: ${initialDeposit})
+Bankroll: ${floor(bankroll)}
+Total net gain: ${floor(totalNetGain)}
+Total gain: ${floor(totalGain)}
+Total loss: ${floor(totalLoss)}
+Performance: ${floor(performance * 100)}%
+Actual balance: ${floor(balance)}  (Initial balance: ${initialDeposit})
 <br>
 Placed bets
 ${toTable(placedBets)}

@@ -1,7 +1,7 @@
-import { chain, floor } from 'lodash'
+import { chain } from 'lodash'
 import type { PolymarketPrice } from '../../market/infra/repository.type'
 import type { Amount as AmountType } from '../../utils/index.type'
-import { Amount } from '../../utils/index.validator'
+import { Amount, Percentage } from '../../utils/index.validator'
 
 export type WinningBet = { outcomePrice: PolymarketPrice; amountBet: AmountType }
 
@@ -10,7 +10,6 @@ export namespace Rules {
     const total = chain(winningBets)
       .map(({ outcomePrice, amountBet }) => gain(outcomePrice, amountBet))
       .sum()
-      .floor()
       .value()
     return Amount(total)
   }
@@ -18,8 +17,13 @@ export namespace Rules {
   export const gain = (outcomePrice: PolymarketPrice, amountBet: AmountType) =>
     Amount(amountBet / outcomePrice - amountBet)
 
-  export const totalNetGain = (gain: AmountType, loss: AmountType) => Amount(floor(Math.max(gain - loss, 0)))
+  export const totalNetGain = (gain: AmountType, loss: AmountType) => Amount(Math.max(gain - loss, 0))
 
   export const bankroll = (initialAmount: AmountType, gain: AmountType, loss: AmountType) =>
-    Amount(floor(Math.max(initialAmount + gain - loss, 0)))
+    Amount(Math.max(initialAmount + gain - loss, 0))
+
+  export const performance = (initialAmount: AmountType, gain: AmountType, loss: AmountType) => {
+    if (initialAmount === 0) return Percentage(0)
+    return Percentage((gain - loss) / initialAmount)
+  }
 }

@@ -2,7 +2,7 @@ import { chain } from 'lodash'
 import { $firestore } from '../index'
 import type { BetId } from '../market/index.type'
 import type { Amount as AmountType } from '../utils/index.type'
-import { Amount, Percentage } from '../utils/index.validator'
+import { Amount } from '../utils/index.validator'
 import { Rules } from './business-rules'
 import type { BettorId } from './index.type'
 import { PlacedBetRepository } from './infra/repository'
@@ -37,9 +37,7 @@ export namespace BettorQuery {
 
   export const getPerformance = (bettorId: BettorId) => async (initialAmount: AmountType) => {
     const [gain, loss] = await Promise.all([BettorQuery.getTotalGain(bettorId)(), BettorQuery.getTotalLoss(bettorId)()])
-    const netGain = gain - loss
-    const percentageReturn = netGain / initialAmount
-    return Percentage(percentageReturn)
+    return Rules.performance(initialAmount, gain, loss)
   }
 
   export const getCurrentPlacedBets = (id: BettorId) => async (): Promise<BetId[]> => {

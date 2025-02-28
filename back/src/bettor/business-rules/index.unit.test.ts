@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'bun:test'
 import { PolymarketPrice } from '../../market/infra/repository.validator'
 import { Amount } from '../../utils/index.validator'
+import { Percentage } from '../../utils/index.validator'
 import { Rules, type WinningBet } from './index'
 
 describe('totalGain', () => {
@@ -15,7 +16,7 @@ describe('totalGain', () => {
     const total = Rules.totalGain(winningBets)
 
     // Then
-    expect(total).toBe(Amount(36))
+    expect(total).toBe(Amount(36.111111111111114))
   })
 
   it('should return 0 if empty', () => {
@@ -65,18 +66,6 @@ describe('totalNetGain', () => {
     // Then
     expect(totalNetGain).toBe(Amount(0))
   })
-
-  it('should floor decimal results', () => {
-    // Given
-    const gain = Amount(50.75)
-    const loss = Amount(20.25)
-
-    // When
-    const totalNetGain = Rules.totalNetGain(gain, loss)
-
-    // Then
-    expect(totalNetGain).toBe(Amount(30)) // 50.75 - 20.25 = 30.5 -> floor to 30
-  })
 })
 
 describe('bankroll', () => {
@@ -105,17 +94,45 @@ describe('bankroll', () => {
     // Then
     expect(bankroll).toBe(Amount(0))
   })
+})
 
-  it('should floor decimal results', () => {
+describe('performance', () => {
+  it('should calculate positive performance', () => {
     // Given
-    const initialAmount = Amount(100.5)
-    const gain = Amount(50.75)
-    const loss = Amount(20.25)
+    const initialAmount = Amount(100)
+    const gain = Amount(50)
+    const loss = Amount(20)
 
     // When
-    const bankroll = Rules.bankroll(initialAmount, gain, loss)
+    const performance = Rules.performance(initialAmount, gain, loss)
 
     // Then
-    expect(bankroll).toBe(Amount(131)) // 100.5 + 50.75 - 20.25 = 131
+    expect(performance).toBe(Percentage(0.3)) // (50 - 20) / 100 = 0.3 = 30%
+  })
+
+  it('should calculate negative performance', () => {
+    // Given
+    const initialAmount = Amount(100)
+    const gain = Amount(10)
+    const loss = Amount(50)
+
+    // When
+    const performance = Rules.performance(initialAmount, gain, loss)
+
+    // Then
+    expect(performance).toBe(Percentage(-0.4)) // (10 - 50) / 100 = -0.4 = -40%
+  })
+
+  it('should handle zero initial amount', () => {
+    // Given
+    const initialAmount = Amount(0)
+    const gain = Amount(50)
+    const loss = Amount(20)
+
+    // When
+    const performance = Rules.performance(initialAmount, gain, loss)
+
+    // Then
+    expect(performance).toBe(Percentage(0))
   })
 })
