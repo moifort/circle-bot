@@ -46,7 +46,7 @@ export namespace Bot {
     const bets = await Market.getOpenBetsWithPriceHistory(placedBetIds, Limit(100))
     for (const { yes, no, id, title, endAt } of bets) {
       const bankroll = await BettorQuery.getBankroll(bettorId)(INITIAL_DEPOSIT)
-      const evaluation = Evaluator.evaluateWithFavoriteStrategy(yes, no, bankroll)
+      const evaluation = Evaluator.evaluateWithJumpStrategy(yes, no, bankroll)
       if (evaluation.isError()) return Result.error(evaluation.error)
       const { outcome, amountToBet } = evaluation.getOrThrow()
       const { error } = await Wallet.withdraw(walletId)(
