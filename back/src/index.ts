@@ -46,7 +46,7 @@ export const botJump = process.env.FUNCTIONS_EMULATOR
       const result = await Bot.runWithJumpStrategy(bettorIdJump, walletIdJump)
       response.status(200).send(result.isError() ? result.error : 'OK')
     })
-  : onSchedule('every minute', async () => {
+  : onSchedule('every day', async () => {
       const result = await Bot.runWithJumpStrategy(bettorIdJump, walletIdJump)
       console.log(`[BOT] ${result.isError() ? result.error : 'OK'}`)
     })
