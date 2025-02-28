@@ -51,6 +51,9 @@ export namespace Bot {
       if (error === 'insufficient-funds') return Result.error(evaluation.error)
       await BettorCommand.placeBet(bettorId)(id, title, endAt, outcome, outcome === 'yes' ? yes : no, amountToBet)
     }
+    await BettorCommand.updateAllPendingBet(bettorId)()
+    const redeemedAmount = await BettorCommand.redeemAllWonBets(bettorId)()
+    if (redeemedAmount > 0) await Wallet.deposit(walletId)(redeemedAmount, TransactionDescription('redeem'))
     return Result.ok()
   }
 }
