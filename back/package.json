@@ -41,7 +41,7 @@
     "@biomejs/biome": "1.9.4",
     "@eslint/js": "9.21.0",
     "@firebase/rules-unit-testing": "4.0.1",
-    "@types/bun": "1.2.3",
+    "@types/bun": "1.2.4",
     "@types/lodash": "4.17.15",
     "firebase-functions-test": "3.4.0",
     "typescript": "5.7.3"
