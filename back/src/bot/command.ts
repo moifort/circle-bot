@@ -34,7 +34,7 @@ export namespace Bot {
     return Result.ok()
   }
 
-  export const runWithJumpStrategy = async (bettorId: BettorId, walletId: WalletId, limit = Limit(300)) => {
+  export const runWithJumpStrategy = async (bettorId: BettorId, walletId: WalletId, limit = Limit(180)) => {
     const placedBetIds = await BettorQuery.getCurrentPlacedBets(bettorId)()
     const bets = await Market.getOpenBetsWithPriceHistory(placedBetIds, limit)
     for (const { yes, no, id, title, endAt, priceHistory } of bets) {
