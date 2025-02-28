@@ -2,7 +2,7 @@ import { Result } from 'typescript-result'
 import type { Limit } from '../../utils/index.type'
 import type { BetId as BedIdType, ClosedBet, OpenBet, MarketId as MarketIdType } from '../index.type'
 import { BetDescription, BetId, BetOutcome, BetTitle, MarketId } from '../index.validator'
-import type { PolymarketEvent, PolymarketEventResponse, PolymarketPriceHistory, PriceHistory } from './repository.type'
+import type { PolymarketEvent, PolymarketPriceHistory, PriceHistory } from './repository.type'
 import { PolymarketPrice } from './repository.validator'
 import dayjs from 'dayjs'
 import { chain } from 'lodash'
@@ -34,17 +34,16 @@ export namespace GammaApiRepository {
     )
   }
 
-  export const findLatestOpenBet = async (limit: Limit) => {
+  export const findLatestOpenBet = async (limit: Limit, endDate: Date) => {
     const response = await fetch(
-      `https://gamma-api.polymarket.com/events/pagination?limit=${limit}&active=true&archived=false&closed=false&order=volume24hr&ascending=false&offset=0`,
+      `https://gamma-api.polymarket.com/events?limit=${limit}&active=true&archived=false&closed=false&ascending=false$end_date_max=${endDate.toISOString()}`,
     )
-    const { data } = (await response.json()) as PolymarketEventResponse
+    const data = (await response.json()) as PolymarketEvent[]
     return data
       .filter(({ markets }) => markets.length === 1)
       .flatMap(({ markets }) => markets)
       .filter(({ active }) => active)
       .filter(({ outcomes }) => outcomes === '["Yes", "No"]')
-      .slice(0, limit)
       .map<OpenBet>(({ slug, question, description, endDate, updatedAt, outcomePrices, clobTokenIds }) => ({
         id: BetId(slug),
         status: 'open',
@@ -58,8 +57,10 @@ export namespace GammaApiRepository {
       }))
   }
 
-  export const findHistoryPrices = async (marketId: MarketIdType) => {
-    const response = await fetch(`https://clob.polymarket.com/prices-history?interval=1h&market=${marketId}&fidelity=1`)
+  export const findHistoryPrices = async (marketId: MarketIdType, from: Date, to: Date) => {
+    const response = await fetch(
+      `https://clob.polymarket.com/prices-history?startTs=${Math.floor(from.getTime() / 1000)}&endTs=${Math.floor(to.getTime() / 1000)}&market=${marketId}&fidelity=1`,
+    )
     const { history } = (await response.json()) as PolymarketPriceHistory
     return chain(history)
       .map<PriceHistory>(({ t, p }) => ({ date: dayjs.unix(t).toDate(), price: PolymarketPrice(p) }))

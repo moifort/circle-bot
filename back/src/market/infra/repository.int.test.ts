@@ -3,6 +3,7 @@ import { Limit } from '../../utils/index.validator'
 import type { ClosedBet } from '../index.type'
 import { BetId, BetOutcome, MarketId } from '../index.validator'
 import { GammaApiRepository } from './repository'
+import dayjs from 'dayjs'
 
 describe('GammaApiRepository', () => {
   it('findBy', async () => {
@@ -21,7 +22,7 @@ describe('GammaApiRepository', () => {
 
   it('findLatestPoliticalOpenBet', async () => {
     // When
-    const [bet] = await GammaApiRepository.findLatestOpenBet(Limit(100))
+    const [bet] = await GammaApiRepository.findLatestOpenBet(Limit(10), dayjs().add(20, 'day').toDate())
 
     // Then
     expect(bet).toContainAllKeys([
@@ -41,10 +42,12 @@ describe('GammaApiRepository', () => {
     // When
     const history = await GammaApiRepository.findHistoryPrices(
       MarketId('53991205535397185196292444587899654425036926800380629851404142367998681248725'),
+      dayjs().subtract(4, 'minutes').toDate(),
+      dayjs().toDate(),
     )
 
     // Then
-    expect(history.length).toBeGreaterThan(0)
+    expect(history.length).toBe(5)
     expect(history[0]).toEqual({
       date: expect.any(Date),
       price: expect.any(Number),
