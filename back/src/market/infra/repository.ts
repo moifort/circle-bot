@@ -54,26 +54,4 @@ export namespace GammaApiRepository {
         no: PolymarketPrice(Number.parseFloat(JSON.parse(outcomePrices)[1])),
       }))
   }
-  export const findHistoric = async (limit: Limit) => {
-    const response = await fetch(
-      `https://gamma-api.polymarket.com/events/pagination?limit=${limit}&closed=true&offset=0&ascending=false`,
-    )
-    const { data } = (await response.json()) as PolymarketResponse
-    return data
-      .filter(({ markets }) => markets.length === 1)
-      .flatMap(({ markets }) => markets)
-      .filter(({ outcomes }) => outcomes === '["Yes", "No"]')
-      .slice(0, limit)
-      .map<ClosedBet>(({ slug, question, description, endDate, updatedAt, outcomePrices }) => ({
-        id: BetId(slug),
-        status: 'closed',
-        // title: BetTitle(question),
-        // description: BetDescription(description),
-        endAt: new Date(endDate),
-        updatedAt: new Date(updatedAt),
-        winningOutcome: BetOutcome(JSON.parse(outcomePrices)[0] === '1' ? 'yes' : 'no'),
-        yes: PolymarketPrice(Number.parseFloat(JSON.parse(outcomePrices)[0])),
-        no: PolymarketPrice(Number.parseFloat(JSON.parse(outcomePrices)[1])),
-      }))
-  }
 }

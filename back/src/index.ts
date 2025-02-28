@@ -3,6 +3,7 @@ import { getFirestore } from 'firebase-admin/firestore'
 import { setGlobalOptions } from 'firebase-functions'
 import { onRequest } from 'firebase-functions/https'
 import { onSchedule } from 'firebase-functions/scheduler'
+import { floor } from 'lodash'
 import { graphQlServer } from './api'
 import { BettorId } from './bettor/index.validator'
 import { BettorQuery } from './bettor/query'
@@ -11,7 +12,6 @@ import { Amount } from './utils/index.validator'
 import { toTable } from './utils/pretty'
 import { WalletId } from './wallet/index.validator'
 import { Wallet } from './wallet/query'
-import { floor } from 'lodash'
 
 const app = initializeApp()
 export const $firestore = getFirestore(app)
