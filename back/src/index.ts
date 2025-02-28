@@ -93,7 +93,7 @@ Placed bets
 ${toTable(placedBets)}
 
 Wallet history
-${toTable(transactions)}
+${toTable(transactions.map((transaction) => ({ ...transaction, amount: floor(transaction.amount) })))}
   </body>
 </html>
 `)

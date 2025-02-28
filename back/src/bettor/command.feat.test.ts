@@ -72,7 +72,7 @@ describe('Bettor', () => {
     const redeemAmount = await BettorCommand.redeemAllWonBets(BettorId('bettor-id'))()
 
     // Then
-    expect(redeemAmount).toBe(Amount(458))
+    expect(redeemAmount).toBe(Amount(458.33333333333337))
     expect(await BettorQuery.getTotalGain(BettorId('bettor-id'))()).toBe(Amount(158.33333333333337))
     expect(await PlacedBetRepository.findAll($firestore, BettorId('bettor-id'))('redeemed')).toHaveLength(2)
   })
