@@ -62,7 +62,7 @@ describe('Evaluator', () => {
       const threeMinutesAgo = new Date(now.getTime() - 3 * 60 * 1000)
       const priceHistory = [
         { price: PolymarketPrice(0.5), date: threeMinutesAgo },
-        { price: PolymarketPrice(0.53), date: now },
+        { price: PolymarketPrice(0.55), date: now },
       ]
 
       // When
@@ -82,7 +82,7 @@ describe('Evaluator', () => {
       const threeMinutesAgo = new Date(now.getTime() - 3 * 60 * 1000)
       const priceHistory = [
         { price: PolymarketPrice(0.5), date: threeMinutesAgo },
-        { price: PolymarketPrice(0.47), date: now },
+        { price: PolymarketPrice(0.44), date: now },
       ]
 
       // When
