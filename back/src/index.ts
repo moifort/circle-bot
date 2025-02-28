@@ -36,7 +36,7 @@ export const bot = process.env.FUNCTIONS_EMULATOR
     })
   : onSchedule('every day 06:00', async () => {
       const result = await Bot.runWithFavoriteStrategy(bettorIdFavorite, walletIdFavorite)
-      console.log(`[BOT] ${result}`)
+      console.log(`[BOT] ${result.isError() ? result.error : 'OK'}`)
     })
 
 const bettorIdJump = BettorId('d3c7e2d5-d118-4d04-8e52-1f5e33c7de14')
@@ -47,8 +47,8 @@ export const botJump = process.env.FUNCTIONS_EMULATOR
       response.status(200).send(result.isError() ? result.error : 'OK')
     })
   : onSchedule('every minute', async () => {
-      const result = Bot.runWithJumpStrategy(bettorIdJump, walletIdJump)
-      console.log(`[BOT] ${result}`)
+      const result = await Bot.runWithJumpStrategy(bettorIdJump, walletIdJump)
+      console.log(`[BOT] ${result.isError() ? result.error : 'OK'}`)
     })
 
 export const summarize = onRequest(async (request, response) => {
