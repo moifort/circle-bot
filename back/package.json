@@ -2,7 +2,7 @@
   "name": "circle-back",
   "module": "index.ts",
   "scripts": {
-    "postinstall": "if [[ -z \"$CI\" || -n \"$FIREBASE_TOOLS\" ]]; then bun install --global firebase-tools@13.31.1; fi",
+    "postinstall": "if [[ -z \"$CI\" || -n \"$FIREBASE_TOOLS\" ]]; then bun install --global firebase-tools@13.32.0; fi",
     "lint": "bun biome check",
     "check": "bun tsc",
     "build": "pnpm tsc",
