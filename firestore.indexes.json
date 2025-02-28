@@ -19,6 +19,20 @@
       ]
     },
     {
+      "collectionGroup": "bettor-placed-bets",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "bettorId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "betEndAt",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "wallet-transactions",
       "queryScope": "COLLECTION",
       "fields": [
