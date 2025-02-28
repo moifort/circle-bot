@@ -1,6 +1,5 @@
 import { chain } from 'lodash'
 import { $firestore } from '../index'
-import type { BetId } from '../market/index.type'
 import type { Amount as AmountType } from '../utils/index.type'
 import { Amount } from '../utils/index.validator'
 import { Rules } from './business-rules'
@@ -40,7 +39,8 @@ export namespace BettorQuery {
     return Rules.performance(initialAmount, gain, loss)
   }
 
-  export const getCurrentPlacedBets = (id: BettorId) => async (): Promise<BetId[]> => {
-    throw new Error('Not implemented')
+  export const getCurrentPlacedBets = (bettorId: BettorId) => async () => {
+    const pendingBets = await PlacedBetRepository.findAll($firestore, bettorId)('pending')
+    return pendingBets.map(({ id }) => id)
   }
 }
