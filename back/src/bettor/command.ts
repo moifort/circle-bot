@@ -1,4 +1,4 @@
-import { chain, floor } from 'lodash'
+import { chain } from 'lodash'
 import { Result } from 'typescript-result'
 import { $firestore } from '../index'
 import type { BetId, BetOutcome, BetTitle } from '../market/index.type'
@@ -57,6 +57,6 @@ export namespace BettorCommand {
       .sumBy(({ amountBet, outcomePrice }) => amountBet + Rules.gain(outcomePrice, amountBet))
       .value()
     await Promise.all(wonBets.map(({ id }) => PlacedBetRepository.update($firestore)({ id, status: 'redeemed' })))
-    return Amount(floor(redeemAmount))
+    return Amount(redeemAmount)
   }
 }

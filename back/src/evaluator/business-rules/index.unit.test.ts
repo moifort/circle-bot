@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test'
 import { BetOutcome } from '../../market/index.validator'
 import { PolymarketPrice } from '../../market/infra/repository.validator'
-import { Amount, Percentage } from '../../utils/index.validator'
+import { Amount, Percentage, PercentagePoint } from '../../utils/index.validator'
 import { decideFavorite, decideJump } from './index'
 
 describe('decideFavorite', () => {
@@ -44,13 +44,13 @@ describe('decideFavorite', () => {
 describe('decideJump', () => {
   const now = new Date()
   const threeMinutesAgo = new Date(now.getTime() - 3 * 60 * 1000)
-  const PRICE_JUMP_THRESHOLD = Percentage(0.05)
+  const PRICE_JUMP_THRESHOLD = PercentagePoint(0.05)
   const MAX_BANKROLL_AMOUNT_TO_BET = Percentage(0.1)
 
-  it('should detect upward jump and bet yes', () => {
+  it('should detect upward jump and bet yes when price is within bounds', () => {
     const priceHistory = [
-      { price: PolymarketPrice(0.5), date: threeMinutesAgo },
-      { price: PolymarketPrice(0.55), date: now },
+      { price: PolymarketPrice(0.51), date: threeMinutesAgo },
+      { price: PolymarketPrice(0.56), date: now },
     ]
 
     const decision = decideJump(MAX_BANKROLL_AMOUNT_TO_BET, PRICE_JUMP_THRESHOLD)(priceHistory, Amount(1000))
@@ -62,7 +62,7 @@ describe('decideJump', () => {
     })
   })
 
-  it('should detect downward jump and bet no', () => {
+  it('should detect downward jump and bet no when price is within bounds', () => {
     const priceHistory = [
       { price: PolymarketPrice(0.5), date: threeMinutesAgo },
       { price: PolymarketPrice(0.449), date: now },
@@ -86,6 +86,30 @@ describe('decideJump', () => {
     const decision = decideJump(MAX_BANKROLL_AMOUNT_TO_BET, PRICE_JUMP_THRESHOLD)(priceHistory, Amount(1000))
 
     expect(decision.isError()).toBe(true)
-    expect(decision.error).toBe('no-significant-jump')
+    expect(decision.error).toBe('unprofitable-bet')
+  })
+
+  it('should not bet when favorite price is above 95', () => {
+    const priceHistory = [
+      { price: PolymarketPrice(0.9), date: threeMinutesAgo },
+      { price: PolymarketPrice(0.96), date: now },
+    ]
+
+    const decision = decideJump(MAX_BANKROLL_AMOUNT_TO_BET, PRICE_JUMP_THRESHOLD)(priceHistory, Amount(1000))
+
+    expect(decision.isError()).toBe(true)
+    expect(decision.error).toBe('unprofitable-bet')
+  })
+
+  it('should not bet when favorite price is below 50', () => {
+    const priceHistory = [
+      { price: PolymarketPrice(0.45), date: threeMinutesAgo },
+      { price: PolymarketPrice(0.4), date: now },
+    ]
+
+    const decision = decideJump(MAX_BANKROLL_AMOUNT_TO_BET, PRICE_JUMP_THRESHOLD)(priceHistory, Amount(1000))
+
+    expect(decision.isError()).toBe(true)
+    expect(decision.error).toBe('unprofitable-bet')
   })
 })

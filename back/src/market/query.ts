@@ -16,15 +16,15 @@ export namespace Market {
   export const getOpenBetsWithPriceHistory = async (filterBy: BetId[], limit: Limit) => {
     const bets = await GammaApiRepository.findLatestOpenBet(limit, dayjs().add(20, 'day').toDate())
     const filteredBets = bets.filter(({ id }) => !filterBy.includes(id))
-    return await Promise.all<OpenBetWithPriceHistory>(
-      filteredBets.map(async (bet) => ({
-        ...bet,
-        priceHistory: await GammaApiRepository.findHistoryPrices(
-          bet.marketId,
-          dayjs().subtract(4, 'minutes').toDate(),
-          dayjs().toDate(),
-        ),
-      })),
-    )
+    const history: OpenBetWithPriceHistory[] = []
+    for (const bet of filteredBets) {
+      const priceHistory = await GammaApiRepository.findHistoryPrices(
+        bet.marketId,
+        dayjs().subtract(4, 'minutes').toDate(),
+        dayjs().toDate(),
+      )
+      history.push({ ...bet, priceHistory })
+    }
+    return history
   }
 }

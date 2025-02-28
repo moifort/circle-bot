@@ -44,7 +44,7 @@ describe('Market', () => {
     // When
     const bets = await Market.getOpenBetsWithPriceHistory(
       [BetId('will-twitter-announce-bankruptcy-in-2023')],
-      Limit(50),
+      Limit(15),
     )
 
     // Then

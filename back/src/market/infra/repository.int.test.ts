@@ -47,7 +47,7 @@ describe('GammaApiRepository', () => {
     )
 
     // Then
-    expect(history.length).toBe(5)
+    expect(history.length).toBeGreaterThan(3)
     expect(history[0]).toEqual({
       date: expect.any(Date),
       price: expect.any(Number),

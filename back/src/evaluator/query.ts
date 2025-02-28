@@ -29,14 +29,14 @@ export namespace Evaluator {
     }))
   }
 
-  export const evaluateWithJumpStrategy = (last5MinutesPriceHistory: PriceHistory[], currentCapital: AmountType) => {
-    if (currentCapital < MINIMUM_BANKROLL) return Result.error('funds-too-low' as const)
+  export const evaluateWithJumpStrategy = (last5MinutesPriceHistory: PriceHistory[], bankroll: AmountType) => {
+    if (bankroll < MINIMUM_BANKROLL) return Result.error('funds-too-low' as const)
     const cutoffTime = dayjs().subtract(HISTORY_WINDOW, 'minutes').toDate()
     const recentHistory = chain(last5MinutesPriceHistory)
       .filter(({ date }) => dayjs(date).isAfter(cutoffTime))
       .sortBy(({ date }) => date)
       .value()
     if (recentHistory.length === 0 || recentHistory.length < 2) return Result.error('insufficient-history' as const)
-    return decideJump(MAX_BANKROLL_AMOUNT_TO_BET, PRICE_JUMP_THRESHOLD_POINTS)(last5MinutesPriceHistory, currentCapital)
+    return decideJump(MAX_BANKROLL_AMOUNT_TO_BET, PRICE_JUMP_THRESHOLD_POINTS)(last5MinutesPriceHistory, bankroll)
   }
 }
