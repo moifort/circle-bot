@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { Amount, Limit, Minute, Percentage } from './index.validator'
+import { Amount, Limit, Minute, Percentage, PercentagePoint } from './index.validator'
 
 describe('Limit', () => {
   it('should throw if the value is not an integer', () => {
@@ -53,5 +53,18 @@ describe('Minute', () => {
   it('should reject non-integer numbers', () => {
     expect(() => Minute(1.5)).toThrow()
     expect(() => Minute(0.1)).toThrow()
+  })
+})
+
+describe('PercentagePoint', () => {
+  it('should validate percentage points in decimal form', () => {
+    expect(() => PercentagePoint(0.05)).not.toThrow() // 5 points
+    expect(() => PercentagePoint(0.5)).not.toThrow() // 50 points
+    expect(() => PercentagePoint(1)).not.toThrow() // 100 points
+  })
+
+  it('should throw error for invalid percentage points', () => {
+    expect(() => PercentagePoint(-0.1)).toThrow()
+    expect(() => PercentagePoint(1.1)).toThrow()
   })
 })
