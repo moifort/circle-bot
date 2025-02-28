@@ -1,17 +1,18 @@
 import { describe, expect, it } from 'bun:test'
+import { Limit } from '../utils/index.validator'
 import { BetId, BetOutcome } from './index.validator'
 import { Market } from './query'
 
 describe('Market', () => {
-  it('latestOpenBets', async () => {
+  it('getLatestOpenBets', async () => {
     // When
-    const bets = await Market.getLatestOpenBets()
+    const bets = await Market.getLatestOpenBets([], Limit(10))
 
     // Then
     expect(bets).toBeArray()
   })
 
-  it('bet', async () => {
+  it('getBet', async () => {
     // When
     const bet = await Market.getBet(BetId('will-twitter-announce-bankruptcy-in-2023'))
 
@@ -25,7 +26,7 @@ describe('Market', () => {
     })
   })
 
-  it('bets', async () => {
+  it('getAllBet', async () => {
     // When
     const [bet] = await Market.getAllBet([BetId('will-twitter-announce-bankruptcy-in-2023')])
 
@@ -36,6 +37,34 @@ describe('Market', () => {
       id: BetId('will-twitter-announce-bankruptcy-in-2023'),
       status: 'closed',
       winningOutcome: BetOutcome('no'),
+    })
+  })
+
+  it('getOpenBetsWithPriceHistory', async () => {
+    // When
+    const bets = await Market.getOpenBetsWithPriceHistory(
+      [BetId('will-twitter-announce-bankruptcy-in-2023')],
+      Limit(50),
+    )
+
+    // Then
+    expect(bets).toBeArray()
+    expect(bets[0]).toContainAllKeys([
+      'id',
+      'status',
+      'title',
+      'description',
+      'endAt',
+      'updatedAt',
+      'yes',
+      'no',
+      'marketId',
+      'priceHistory',
+    ])
+    expect(bets[0].priceHistory).toBeArray()
+    expect(bets[0].priceHistory[0]).toEqual({
+      date: expect.any(Date),
+      price: expect.any(Number),
     })
   })
 })

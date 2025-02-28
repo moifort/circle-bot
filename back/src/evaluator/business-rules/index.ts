@@ -20,20 +20,15 @@ export const decideFavorite = (estimatedProbability: PercentageType, price: Poly
 }
 
 export const decideJump =
-  (bankrollPercentage: PercentageType, jumpThreshold: PercentageType) =>
+  (bankrollPercentage: PercentageType, jumpThresholdPoints: number) =>
   (recentHistory: PriceHistory[], currentCapital: AmountType) => {
-    const oldestPrice = first(recentHistory)?.price ?? 0
-    const latestPrice = last(recentHistory)?.price ?? 0
-    const progression = (latestPrice - oldestPrice) / oldestPrice
-
-    if (Math.abs(progression) >= jumpThreshold) {
-      const outcome = progression > 0 ? BetOutcome('yes') : BetOutcome('no')
+    const oldestPrice = first(recentHistory)!.price
+    const latestPrice = last(recentHistory)!.price
+    const pointDifference = latestPrice - oldestPrice
+    if (Math.abs(pointDifference) >= jumpThresholdPoints) {
+      const outcome = pointDifference > 0 ? BetOutcome('yes') : BetOutcome('no')
       const amountToBet = Amount(Math.floor((currentCapital * bankrollPercentage) / 10) * 10)
-
-      if (amountToBet > 0) {
-        return Result.ok({ outcome, amountToBet })
-      }
+      if (amountToBet > 0) return Result.ok({ outcome, amountToBet })
     }
-
     return Result.error('no-significant-jump' as const)
   }

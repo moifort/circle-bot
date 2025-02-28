@@ -177,4 +177,36 @@ describe('Bettor', () => {
     // Then
     expect(bankroll).toBe(Amount(215)) // 200 + (100 * 0.25) - 10 = 215
   })
+
+  it('getCurrentPlacedBets', async () => {
+    // Given
+    await PlacedBetRepository.save($firestore)({
+      id: PlacedBetId('pending-bet-id'),
+      bettorId: BettorId('bettor-id'),
+      status: 'pending' as const,
+      title: BetTitle('ETH will reach $5000'),
+      outcome: 'yes',
+      outcomePrice: PolymarketPrice(0.6),
+      amountBet: Amount(100),
+      betEndAt: new Date(),
+      placedAt: new Date(),
+    })
+    await PlacedBetRepository.save($firestore)({
+      id: PlacedBetId('redeemed-bet-id'),
+      bettorId: BettorId('bettor-id'),
+      status: 'redeemed' as const,
+      title: BetTitle('BTC will reach $100k'),
+      outcome: 'no',
+      outcomePrice: PolymarketPrice(0.7),
+      amountBet: Amount(200),
+      betEndAt: new Date(),
+      placedAt: new Date(),
+    })
+
+    // When
+    const currentBets = await BettorQuery.getCurrentPlacedBets(BettorId('bettor-id'))()
+
+    // Then
+    expect(currentBets).toEqual([PlacedBetId('pending-bet-id')])
+  })
 })

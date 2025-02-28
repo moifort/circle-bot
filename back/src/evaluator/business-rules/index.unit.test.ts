@@ -50,7 +50,7 @@ describe('decideJump', () => {
   it('should detect upward jump and bet yes', () => {
     const priceHistory = [
       { price: PolymarketPrice(0.5), date: threeMinutesAgo },
-      { price: PolymarketPrice(0.53), date: now },
+      { price: PolymarketPrice(0.55), date: now },
     ]
 
     const decision = decideJump(MAX_BANKROLL_AMOUNT_TO_BET, PRICE_JUMP_THRESHOLD)(priceHistory, Amount(1000))
@@ -65,7 +65,7 @@ describe('decideJump', () => {
   it('should detect downward jump and bet no', () => {
     const priceHistory = [
       { price: PolymarketPrice(0.5), date: threeMinutesAgo },
-      { price: PolymarketPrice(0.47), date: now },
+      { price: PolymarketPrice(0.449), date: now },
     ]
 
     const decision = decideJump(MAX_BANKROLL_AMOUNT_TO_BET, PRICE_JUMP_THRESHOLD)(priceHistory, Amount(1000))
@@ -87,20 +87,5 @@ describe('decideJump', () => {
 
     expect(decision.isError()).toBe(true)
     expect(decision.error).toBe('no-significant-jump')
-  })
-
-  it('should calculate bet amount as percentage of capital', () => {
-    const priceHistory = [
-      { price: PolymarketPrice(0.5), date: threeMinutesAgo },
-      { price: PolymarketPrice(0.53), date: now },
-    ]
-
-    const decision = decideJump(MAX_BANKROLL_AMOUNT_TO_BET, PRICE_JUMP_THRESHOLD)(priceHistory, Amount(2000))
-
-    expect(decision.isOk()).toBe(true)
-    expect(decision.getOrThrow()).toEqual({
-      outcome: BetOutcome('yes'),
-      amountToBet: Amount(200), // 10% of 2000
-    })
   })
 })

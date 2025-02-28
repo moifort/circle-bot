@@ -1,10 +1,12 @@
 import type { Brand } from 'ts-brand'
-import type { PolymarketPrice } from './infra/repository.type'
+import type { PolymarketPrice, PriceHistory } from './infra/repository.type'
 
 export type BetId = Brand<string, 'BetId'>
 export type BetTitle = Brand<string, 'BetTitle'>
 export type BetDescription = Brand<string, 'BetDescription'>
 export type BetOutcome = 'yes' | 'no'
+export type MarketId = Brand<string, 'MarketId'>
+
 export type ClosedBet = {
   id: BetId
   status: 'closed'
@@ -21,4 +23,7 @@ export type OpenBet = {
   updatedAt: Date
   yes: PolymarketPrice
   no: PolymarketPrice
+  marketId: MarketId
 }
+
+export type OpenBetWithPriceHistory = OpenBet & { priceHistory: PriceHistory[] }

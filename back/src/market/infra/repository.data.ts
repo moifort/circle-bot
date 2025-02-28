@@ -528,3 +528,19 @@ export const event = {
   gmpChartMode: 'default',
   negRiskAugmented: false,
 }
+export const priceHistory = {
+  history: [
+    {
+      t: 1740747004,
+      p: 0.295,
+    },
+    {
+      t: 1740747065,
+      p: 0.295,
+    },
+    {
+      t: 1740747125,
+      p: 0.295,
+    },
+  ],
+}
