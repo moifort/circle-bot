@@ -2,7 +2,7 @@ import { first, floor, last } from 'lodash'
 import { Result } from 'typescript-result'
 import { BetOutcome } from '../../market/index.validator'
 import type { PolymarketPrice, PriceHistory } from '../../market/infra/repository.type'
-import type { Amount as AmountType, Percentage as PercentageType, PercentagePoint } from '../../utils/index.type'
+import type { Amount as AmountType, PercentagePoint, Percentage as PercentageType } from '../../utils/index.type'
 import { Amount } from '../../utils/index.validator'
 
 // Kelly algorithm

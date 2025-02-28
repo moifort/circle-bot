@@ -12,9 +12,9 @@ import { Wallet } from '../wallet/query'
 export namespace Bot {
   const INITIAL_DEPOSIT = Amount(1000)
 
-  export const runWithFavoriteStrategy = async (bettorId: BettorId, walletId: WalletId) => {
+  export const runWithFavoriteStrategy = async (bettorId: BettorId, walletId: WalletId, limit = Limit(300)) => {
     const placedBetIds = await BettorQuery.getCurrentPlacedBets(bettorId)()
-    const bets = await Market.getLatestOpenBets(placedBetIds, Limit(300))
+    const bets = await Market.getLatestOpenBets(placedBetIds, limit)
     for (const { id, title, endAt, yes, no } of bets) {
       const bankroll = await BettorQuery.getBankroll(bettorId)(INITIAL_DEPOSIT)
       const evaluation = Evaluator.evaluateWithFavoriteStrategy(yes, no, bankroll)
@@ -34,9 +34,9 @@ export namespace Bot {
     return Result.ok()
   }
 
-  export const runWithJumpStrategy = async (bettorId: BettorId, walletId: WalletId) => {
+  export const runWithJumpStrategy = async (bettorId: BettorId, walletId: WalletId, limit = Limit(300)) => {
     const placedBetIds = await BettorQuery.getCurrentPlacedBets(bettorId)()
-    const bets = await Market.getOpenBetsWithPriceHistory(placedBetIds, Limit(200))
+    const bets = await Market.getOpenBetsWithPriceHistory(placedBetIds, limit)
     for (const { yes, no, id, title, endAt, priceHistory } of bets) {
       const bankroll = await BettorQuery.getBankroll(bettorId)(INITIAL_DEPOSIT)
       const evaluation = Evaluator.evaluateWithJumpStrategy(priceHistory, bankroll)
