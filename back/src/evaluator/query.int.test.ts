@@ -12,14 +12,13 @@ describe('Evaluate', () => {
     const totalCapital = Amount(1000)
 
     // When
-    const evaluation = Evaluator.evaluate(yes, no, totalCapital)
+    const evaluation = Evaluator.evaluateWithFavoriteStrategy(yes, no, totalCapital)
 
     // Then
     expect(evaluation.isOk()).toBe(true)
     expect(evaluation.getOrThrow()).toEqual({
       outcome: BetOutcome('yes'),
-      amountToBet: Amount(120),
-      expectedGain: Amount(50),
+      amountToBet: Amount(60),
     })
   })
 
@@ -30,14 +29,13 @@ describe('Evaluate', () => {
     const totalCapital = Amount(1000)
 
     // When
-    const evaluation = Evaluator.evaluate(yes, no, totalCapital)
+    const evaluation = Evaluator.evaluateWithFavoriteStrategy(yes, no, totalCapital)
 
     // Then
     expect(evaluation.isOk()).toBe(true)
     expect(evaluation.getOrThrow()).toEqual({
       outcome: BetOutcome('no'),
-      amountToBet: Amount(220),
-      expectedGain: Amount(50),
+      amountToBet: Amount(100),
     })
   })
 
@@ -48,10 +46,71 @@ describe('Evaluate', () => {
     const lowCapital = Amount(1)
 
     // When
-    const evaluation = Evaluator.evaluate(yes, no, lowCapital)
+    const evaluation = Evaluator.evaluateWithFavoriteStrategy(yes, no, lowCapital)
 
     // Then
     expect(evaluation.isError()).toBe(true)
     expect(evaluation.error).toEqual('funds-too-low')
+  })
+})
+
+describe('Evaluator', () => {
+  describe('evaluateWithJumpStrategy', () => {
+    it('should detect upward jump and bet on yes', () => {
+      // Given
+      const now = new Date()
+      const threeMinutesAgo = new Date(now.getTime() - 3 * 60 * 1000)
+      const priceHistory = [
+        { price: PolymarketPrice(0.5), date: threeMinutesAgo },
+        { price: PolymarketPrice(0.53), date: now },
+      ]
+
+      // When
+      const decision = Evaluator.evaluateWithJumpStrategy(priceHistory, Amount(1000))
+
+      // Then
+      expect(decision.isOk()).toBe(true)
+      expect(decision.getOrThrow()).toEqual({
+        outcome: 'yes',
+        amountToBet: Amount(100), // 10% of 1000
+      })
+    })
+
+    it('should detect downward jump and bet on no', () => {
+      // Given
+      const now = new Date()
+      const threeMinutesAgo = new Date(now.getTime() - 3 * 60 * 1000)
+      const priceHistory = [
+        { price: PolymarketPrice(0.5), date: threeMinutesAgo },
+        { price: PolymarketPrice(0.47), date: now },
+      ]
+
+      // When
+      const decision = Evaluator.evaluateWithJumpStrategy(priceHistory, Amount(1000))
+
+      // Then
+      expect(decision.isOk()).toBe(true)
+      expect(decision.getOrThrow()).toEqual({
+        outcome: 'no',
+        amountToBet: Amount(100), // 10% of 1000
+      })
+    })
+
+    it('should not bet if funds too low', () => {
+      // Given
+      const now = new Date()
+      const threeMinutesAgo = new Date(now.getTime() - 3 * 60 * 1000)
+      const priceHistory = [
+        { price: PolymarketPrice(0.5), date: threeMinutesAgo },
+        { price: PolymarketPrice(0.53), date: now },
+      ]
+
+      // When
+      const decision = Evaluator.evaluateWithJumpStrategy(priceHistory, Amount(5))
+
+      // Then
+      expect(decision.isError()).toBe(true)
+      expect(decision.error).toBe('funds-too-low')
+    })
   })
 })

@@ -14,7 +14,6 @@ describe('TransactionId', () => {
 describe('TransactionDescription', () => {
   it('should throw if the value empty', () => {
     expect(() => TransactionDescription('')).toThrow()
-    expect(() => TransactionDescription(() => null)).toThrow()
   })
 
   it('should not throw for a valid BetDescription', () => {

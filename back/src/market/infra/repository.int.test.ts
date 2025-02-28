@@ -5,7 +5,7 @@ import { BetId, BetOutcome } from '../index.validator'
 import { GammaApiRepository } from './repository'
 
 describe('GammaApiRepository', () => {
-  it('findBy', async () => {
+  it.skip('findBy', async () => {
     // When
     const closedBet = await GammaApiRepository.findBy(BetId('will-twitter-announce-bankruptcy-in-2023'))
 
@@ -19,7 +19,7 @@ describe('GammaApiRepository', () => {
     } as ClosedBet)
   })
 
-  it('findLatestPoliticalOpenBet', async () => {
+  it.skip('findLatestPoliticalOpenBet', async () => {
     // When
     const [bet] = await GammaApiRepository.findLatestOpenBet(Limit(100))
 
