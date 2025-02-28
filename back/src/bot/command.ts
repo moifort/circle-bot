@@ -3,10 +3,10 @@ import type { BettorId } from '../bettor/index.type'
 import { BettorQuery } from '../bettor/query'
 import { Evaluator } from '../evaluator/query'
 import { Market } from '../market/query'
+import { Amount } from '../utils/index.validator'
 import type { WalletId } from '../wallet/index.type'
 import { TransactionDescription } from '../wallet/index.validator'
 import { Wallet } from '../wallet/query'
-import { Amount } from '../utils/index.validator'
 
 export namespace Bot {
   const INITIAL_DEPOSIT = Amount(1000)
