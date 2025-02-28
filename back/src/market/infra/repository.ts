@@ -1,11 +1,11 @@
+import dayjs from 'dayjs'
+import { chain } from 'lodash'
 import { Result } from 'typescript-result'
 import type { Limit } from '../../utils/index.type'
-import type { BetId as BedIdType, ClosedBet, OpenBet, MarketId as MarketIdType } from '../index.type'
+import type { BetId as BedIdType, ClosedBet, MarketId as MarketIdType, OpenBet } from '../index.type'
 import { BetDescription, BetId, BetOutcome, BetTitle, MarketId } from '../index.validator'
 import type { PolymarketEvent, PolymarketPriceHistory, PriceHistory } from './repository.type'
 import { PolymarketPrice } from './repository.validator'
-import dayjs from 'dayjs'
-import { chain } from 'lodash'
 
 export namespace GammaApiRepository {
   export const findBy = async (id: BedIdType) => {

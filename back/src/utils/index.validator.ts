@@ -4,8 +4,8 @@ import type {
   Amount as AmountType,
   Limit as LimitType,
   Minute as MinuteType,
-  Percentage as PercentageType,
   PercentagePoint as PercentagePointType,
+  Percentage as PercentageType,
 } from './index.type'
 
 export const Limit = make<LimitType>((value) => z.number().int().min(1).max(1000).parse(value))

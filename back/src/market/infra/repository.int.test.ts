@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'bun:test'
+import dayjs from 'dayjs'
 import { Limit } from '../../utils/index.validator'
 import type { ClosedBet } from '../index.type'
 import { BetId, BetOutcome, MarketId } from '../index.validator'
 import { GammaApiRepository } from './repository'
-import dayjs from 'dayjs'
 
 describe('GammaApiRepository', () => {
   it('findBy', async () => {

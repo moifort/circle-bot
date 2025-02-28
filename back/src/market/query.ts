@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
+import type { Limit } from '../utils/index.type'
 import type { BetId, OpenBetWithPriceHistory } from './index.type'
 import { GammaApiRepository } from './infra/repository'
-import type { Limit } from '../utils/index.type'
 
 export namespace Market {
   export const getLatestOpenBets = async (filterBy: BetId[], limit: Limit) => {
