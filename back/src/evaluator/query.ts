@@ -4,12 +4,12 @@ import { Result } from 'typescript-result'
 import { BetOutcome } from '../market/index.validator'
 import type { PolymarketPrice, PriceHistory } from '../market/infra/repository.type'
 import type { Amount as AmountType } from '../utils/index.type'
-import { Amount, Minute, Percentage } from '../utils/index.validator'
+import { Amount, Minute, Percentage, PercentagePoint } from '../utils/index.validator'
 import { decideFavorite, decideJump } from './business-rules'
 
 export namespace Evaluator {
   const MINIMUM_BANKROLL = Amount(10)
-  const PRICE_JUMP_THRESHOLD_POINTS = 0.05 // 5 points jump (e.g., from 0.50 to 0.55)
+  const PRICE_JUMP_THRESHOLD_POINTS = PercentagePoint(0.05) // 5 points jump (e.g., from 0.50 to 0.55)
   const MAX_BANKROLL_AMOUNT_TO_BET = Percentage(0.1)
   const HISTORY_WINDOW = Minute(4)
 
