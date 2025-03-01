@@ -11,7 +11,7 @@ export namespace Evaluator {
   const MINIMUM_BANKROLL = Amount(10)
   const PRICE_JUMP_THRESHOLD_POINTS = PercentagePoint(0.05) // 5 points jump (e.g., from 0.50 to 0.55)
   const MAX_BANKROLL_AMOUNT_TO_BET = Percentage(0.06)
-  const HISTORY_WINDOW = Minute(4)
+  const HISTORY_WINDOW = Minute(3)
 
   export const evaluateWithFavoriteStrategy = (yes: PolymarketPrice, no: PolymarketPrice, bankroll: AmountType) => {
     if (bankroll < MINIMUM_BANKROLL) return Result.error('funds-too-low' as const)

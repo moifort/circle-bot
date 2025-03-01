@@ -1,12 +1,17 @@
 import { first, floor, last } from 'lodash'
 import { Result } from 'typescript-result'
 import { BetOutcome } from '../../market/index.validator'
-import type { PolymarketPrice, PriceHistory } from '../../market/infra/repository.type'
+import type { PolymarketPrice as PolymarketPriceType, PriceHistory } from '../../market/infra/repository.type'
 import type { Amount as AmountType, PercentagePoint, Percentage as PercentageType } from '../../utils/index.type'
 import { Amount } from '../../utils/index.validator'
+import { PolymarketPrice } from '../../market/infra/repository.validator'
 
 // Kelly algorithm
-export const decideFavorite = (estimatedProbability: PercentageType, price: PolymarketPrice, bankroll: AmountType) => {
+export const decideFavorite = (
+  estimatedProbability: PercentageType,
+  price: PolymarketPriceType,
+  bankroll: AmountType,
+) => {
   const expectedValue = estimatedProbability - price
   const numerator = estimatedProbability * (1 - price) - (1 - estimatedProbability) * price
   const denominator = 1 - price
@@ -30,7 +35,7 @@ export const decideJump =
       const favoritePrice = outcome === 'yes' ? latestPrice : 1 - latestPrice
       if (favoritePrice <= 0.95 && favoritePrice >= 0.5) {
         const amountToBet = Amount(Math.floor((bankroll * bankrollPercentage) / 10) * 10)
-        if (amountToBet > 0) return Result.ok({ outcome, amountToBet })
+        if (amountToBet > 0) return Result.ok({ outcome, amountToBet, price: PolymarketPrice(favoritePrice) })
       }
     }
     return Result.error('unprofitable-bet' as const)
