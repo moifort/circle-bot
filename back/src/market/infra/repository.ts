@@ -1,6 +1,5 @@
 import dayjs from 'dayjs'
 import { chain } from 'lodash'
-import { Result } from 'typescript-result'
 import type { Limit } from '../../utils/index.type'
 import type { BetId as BedIdType, ClosedBet, MarketId as MarketIdType, OpenBet } from '../index.type'
 import { BetDescription, BetId, BetOutcome, BetTitle, MarketId } from '../index.validator'
@@ -12,25 +11,23 @@ export namespace GammaApiRepository {
     const response = await fetch(`https://gamma-api.polymarket.com/markets/slug/${id}`)
     const { closed, slug, endDate, outcomePrices, question, description, updatedAt } =
       (await response.json()) as PolymarketMarket
-    return Result.ok(
-      closed
-        ? <ClosedBet>{
-            id: BetId(slug),
-            status: 'closed',
-            endAt: new Date(endDate),
-            winningOutcome: BetOutcome(JSON.parse(outcomePrices)[0] === '1' ? 'yes' : 'no'),
-          }
-        : <OpenBet>{
-            id: BetId(slug),
-            status: 'open',
-            title: BetTitle(question),
-            description: BetDescription(description),
-            endAt: new Date(endDate),
-            updatedAt: new Date(updatedAt),
-            yes: PolymarketPrice(Number.parseFloat(JSON.parse(outcomePrices)[0])),
-            no: PolymarketPrice(Number.parseFloat(JSON.parse(outcomePrices)[1])),
-          },
-    )
+    return closed
+      ? <ClosedBet>{
+          id: BetId(slug),
+          status: 'closed',
+          endAt: new Date(endDate),
+          winningOutcome: BetOutcome(JSON.parse(outcomePrices)[0] === '1' ? 'yes' : 'no'),
+        }
+      : <OpenBet>{
+          id: BetId(slug),
+          status: 'open',
+          title: BetTitle(question),
+          description: BetDescription(description),
+          endAt: new Date(endDate),
+          updatedAt: new Date(updatedAt),
+          yes: PolymarketPrice(Number.parseFloat(JSON.parse(outcomePrices)[0])),
+          no: PolymarketPrice(Number.parseFloat(JSON.parse(outcomePrices)[1])),
+        }
   }
 
   export const findLatestOpenBet = async (limit: Limit, endDate: Date) => {

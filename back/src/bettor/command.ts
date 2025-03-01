@@ -41,11 +41,9 @@ export namespace BettorCommand {
   export const updateAllPendingBet = (bettorId: BettorId) => async () => {
     const pendingBets = await PlacedBetRepository.findAll($firestore, bettorId)('pending')
     for (const { id, outcome } of pendingBets) {
-      const result = await Market.getBet(id)
-      if (result.isError()) continue
-      if (result.value.status === 'closed') {
-        const { winningOutcome } = result.value
-        const status = winningOutcome === outcome ? 'won' : 'lost'
+      const bet = await Market.getBet(id)
+      if (bet.status === 'closed') {
+        const status = bet.winningOutcome === outcome ? 'won' : 'lost'
         await PlacedBetRepository.update($firestore)({ id, status })
       }
     }

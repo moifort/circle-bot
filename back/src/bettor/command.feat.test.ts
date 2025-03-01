@@ -1,5 +1,4 @@
 import { describe, expect, it, spyOn } from 'bun:test'
-import { Result } from 'typescript-result'
 import { $firestore } from '../index'
 import { BetId, BetOutcome, BetTitle } from '../market/index.validator'
 import { PolymarketPrice } from '../market/infra/repository.validator'
@@ -15,14 +14,12 @@ describe('Bettor', () => {
     // Given
     const marketGetBetSpy = spyOn(Market, 'getBet')
     marketGetBetSpy.mockImplementation(() =>
-      Promise.resolve(
-        Result.ok({
-          id: BetId('bet-id'),
-          status: 'closed',
-          endAt: new Date(),
-          winningOutcome: BetOutcome('yes'),
-        }),
-      ),
+      Promise.resolve({
+        id: BetId('bet-id'),
+        status: 'closed',
+        endAt: new Date(),
+        winningOutcome: BetOutcome('yes'),
+      }),
     )
     await PlacedBetRepository.save($firestore)({
       id: PlacedBetId('bet-id'),

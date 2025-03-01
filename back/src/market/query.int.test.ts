@@ -17,8 +17,7 @@ describe('Market', () => {
     const bet = await Market.getBet(BetId('will-twitter-announce-bankruptcy-in-2023'))
 
     // Then
-    expect(bet.isOk()).toBeTruthy()
-    expect(bet.value).toEqual({
+    expect(bet).toEqual({
       endAt: new Date('2023-12-31T00:00:00.000Z'),
       id: BetId('will-twitter-announce-bankruptcy-in-2023'),
       status: 'closed',
@@ -31,8 +30,7 @@ describe('Market', () => {
     const [bet] = await Market.getAllBet([BetId('will-twitter-announce-bankruptcy-in-2023')])
 
     // Then
-    expect(bet.isOk()).toBeTruthy()
-    expect(bet.value).toEqual({
+    expect(bet).toEqual({
       endAt: new Date('2023-12-31T00:00:00.000Z'),
       id: BetId('will-twitter-announce-bankruptcy-in-2023'),
       status: 'closed',

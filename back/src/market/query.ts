@@ -11,6 +11,12 @@ export namespace Market {
 
   export const getBet = (id: BetId) => GammaApiRepository.findBy(id)
 
+  export const getOpenBet = async (id: BetId) => {
+    const openBet = await GammaApiRepository.findBy(id)
+    if (openBet.status === 'closed') throw new Error(`Bet closed. id: ${openBet.id}`)
+    return openBet
+  }
+
   export const getAllBet = (filterBy: BetId[]) => Promise.all(filterBy.map((id) => GammaApiRepository.findBy(id)))
 
   export const getOpenBetsWithPriceHistory = async (filterBy: BetId[], limit: Limit) => {
