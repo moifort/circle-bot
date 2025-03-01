@@ -72,7 +72,7 @@ describe('Evaluator', () => {
       expect(decision.isOk()).toBe(true)
       expect(decision.getOrThrow()).toEqual({
         outcome: 'yes',
-        amountToBet: Amount(100), // 10% of 1000
+        amountToBet: Amount(60), // 6% of 1000
       })
     })
 
@@ -92,7 +92,7 @@ describe('Evaluator', () => {
       expect(decision.isOk()).toBe(true)
       expect(decision.getOrThrow()).toEqual({
         outcome: 'no',
-        amountToBet: Amount(100), // 10% of 1000
+        amountToBet: Amount(60), // 6% of 1000
       })
     })
 

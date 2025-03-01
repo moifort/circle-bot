@@ -1,7 +1,7 @@
 import type { Brand } from 'ts-brand'
-import type { event, priceHistory } from './repository.data'
+import type { market, priceHistory } from './repository.data'
 
-export type PolymarketEvent = typeof event
+export type PolymarketMarket = typeof market
 export type PolymarketPriceHistory = typeof priceHistory
 
 export type PolymarketPrice = Brand<number, 'PolymarketPrice'>
