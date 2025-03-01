@@ -68,11 +68,14 @@ describe('Evaluator', () => {
       // When
       const decision = Evaluator.evaluateWithJumpStrategy(priceHistory, Amount(1000))
 
+      console.log(decision.error)
+
       // Then
       expect(decision.isOk()).toBe(true)
       expect(decision.getOrThrow()).toEqual({
         outcome: 'yes',
         amountToBet: Amount(60), // 6% of 1000
+        price: PolymarketPrice(0.55),
       })
     })
 
@@ -93,6 +96,7 @@ describe('Evaluator', () => {
       expect(decision.getOrThrow()).toEqual({
         outcome: 'no',
         amountToBet: Amount(60), // 6% of 1000
+        price: PolymarketPrice(0.56),
       })
     })
 

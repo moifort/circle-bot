@@ -2,9 +2,9 @@ import { first, floor, last } from 'lodash'
 import { Result } from 'typescript-result'
 import { BetOutcome } from '../../market/index.validator'
 import type { PolymarketPrice as PolymarketPriceType, PriceHistory } from '../../market/infra/repository.type'
+import { PolymarketPrice } from '../../market/infra/repository.validator'
 import type { Amount as AmountType, PercentagePoint, Percentage as PercentageType } from '../../utils/index.type'
 import { Amount } from '../../utils/index.validator'
-import { PolymarketPrice } from '../../market/infra/repository.validator'
 
 // Kelly algorithm
 export const decideFavorite = (
