@@ -26,7 +26,15 @@ export namespace Bot {
         TransactionDescription({ betId: id, betTitle: title }),
       )
       if (error === 'insufficient-funds') return Result.error(evaluation.error)
-      await BettorCommand.placeBet(bettorId)(id, title, endAt, outcome, outcome === 'yes' ? yes : no, amountToBet)
+      const mostRecentBet = await Market.getOpenBet(id) // Get the most updated price
+      await BettorCommand.placeBet(bettorId)(
+        id,
+        title,
+        endAt,
+        outcome,
+        outcome === 'yes' ? mostRecentBet.yes : mostRecentBet.no,
+        amountToBet,
+      )
     }
     await BettorCommand.updateAllPendingBet(bettorId)()
     const redeemedAmount = await BettorCommand.redeemAllWonBets(bettorId)()
@@ -37,7 +45,7 @@ export namespace Bot {
   export const runWithJumpStrategy = async (bettorId: BettorId, walletId: WalletId, limit = Limit(180)) => {
     const placedBetIds = await BettorQuery.getCurrentPlacedBets(bettorId)()
     const bets = await Market.getOpenBetsWithPriceHistory(placedBetIds, limit)
-    for (const { yes, no, id, title, endAt, priceHistory } of bets) {
+    for (const { id, title, endAt, priceHistory } of bets) {
       const bankroll = await BettorQuery.getBankroll(bettorId)(INITIAL_DEPOSIT)
       const evaluation = Evaluator.evaluateWithJumpStrategy(priceHistory, bankroll)
       if (evaluation.error === 'funds-too-low') return Result.error(evaluation.error)
@@ -49,6 +57,7 @@ export namespace Bot {
         TransactionDescription({ betId: id, betTitle: title }),
       )
       if (error === 'insufficient-funds') return Result.error(evaluation.error)
+      const { yes, no } = await Market.getOpenBet(id) // Get the most updated price
       await BettorCommand.placeBet(bettorId)(id, title, endAt, outcome, outcome === 'yes' ? yes : no, amountToBet)
     }
     await BettorCommand.updateAllPendingBet(bettorId)()

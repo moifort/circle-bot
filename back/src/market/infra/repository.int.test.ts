@@ -13,8 +13,7 @@ describe('GammaApiRepository', () => {
     )
 
     // Then
-    expect(closedBet.isOk()).toBe(true)
-    expect(closedBet.getOrThrow()).toEqual({
+    expect(closedBet).toEqual({
       id: BetId('oscars-best-picture-will-a-real-pain-win-best-picture-at-the-2025-oscars'),
       status: 'closed',
       winningOutcome: BetOutcome('no'),
