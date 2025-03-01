@@ -4,15 +4,14 @@ import { Result } from 'typescript-result'
 import type { Limit } from '../../utils/index.type'
 import type { BetId as BedIdType, ClosedBet, MarketId as MarketIdType, OpenBet } from '../index.type'
 import { BetDescription, BetId, BetOutcome, BetTitle, MarketId } from '../index.validator'
-import type { PolymarketEvent, PolymarketPriceHistory, PriceHistory } from './repository.type'
+import type { PolymarketMarket, PolymarketPriceHistory, PriceHistory } from './repository.type'
 import { PolymarketPrice } from './repository.validator'
 
 export namespace GammaApiRepository {
   export const findBy = async (id: BedIdType) => {
-    const response = await fetch(`https://gamma-api.polymarket.com/events/slug/${id}`)
-    const { closed, slug, endDate, markets } = (await response.json()) as PolymarketEvent
-    if (markets.length > 1) return Result.error('multiple-answer-bet-instead-of-yes-no' as const)
-    const { outcomePrices, question, description, updatedAt } = markets[0]
+    const response = await fetch(`https://gamma-api.polymarket.com/markets/slug/${id}`)
+    const { closed, slug, endDate, outcomePrices, question, description, updatedAt } =
+      (await response.json()) as PolymarketMarket
     return Result.ok(
       closed
         ? <ClosedBet>{
@@ -36,14 +35,12 @@ export namespace GammaApiRepository {
 
   export const findLatestOpenBet = async (limit: Limit, endDate: Date) => {
     const response = await fetch(
-      `https://gamma-api.polymarket.com/events?limit=${limit}&active=true&archived=false&closed=false&ascending=false$end_date_max=${endDate.toISOString()}`,
+      `https://gamma-api.polymarket.com/markets?limit=${limit}&active=true&archived=false&closed=false&end_date_max=${endDate.toISOString()}&end_date_min=${new Date().toISOString()}`,
     )
-    const data = (await response.json()) as PolymarketEvent[]
+    const data = (await response.json()) as PolymarketMarket[]
     return data
-      .filter(({ markets }) => markets.length === 1)
-      .flatMap(({ markets }) => markets)
-      .filter(({ active }) => active)
       .filter(({ outcomes }) => outcomes === '["Yes", "No"]')
+      .filter(({ outcomePrices }) => outcomePrices)
       .map<OpenBet>(({ slug, question, description, endDate, updatedAt, outcomePrices, clobTokenIds }) => ({
         id: BetId(slug),
         status: 'open',
@@ -67,7 +64,7 @@ export namespace GammaApiRepository {
         .map<PriceHistory>(({ t, p }) => ({ date: dayjs.unix(t).toDate(), price: PolymarketPrice(p) }))
         .value()
     } catch (e) {
-      console.log('Ban from API')
+      console.error('Ban from API')
       return []
     }
   }

@@ -8,24 +8,26 @@ import { GammaApiRepository } from './repository'
 describe('GammaApiRepository', () => {
   it('findBy', async () => {
     // When
-    const closedBet = await GammaApiRepository.findBy(BetId('will-twitter-announce-bankruptcy-in-2023'))
+    const closedBet = await GammaApiRepository.findBy(
+      BetId('oscars-best-picture-will-a-real-pain-win-best-picture-at-the-2025-oscars'),
+    )
 
     // Then
     expect(closedBet.isOk()).toBe(true)
     expect(closedBet.getOrThrow()).toEqual({
-      id: BetId('will-twitter-announce-bankruptcy-in-2023'),
+      id: BetId('oscars-best-picture-will-a-real-pain-win-best-picture-at-the-2025-oscars'),
       status: 'closed',
       winningOutcome: BetOutcome('no'),
-      endAt: new Date('2023-12-31T00:00:00.000Z'),
+      endAt: new Date('2025-03-02T12:00:00.000Z'),
     } as ClosedBet)
   })
 
   it('findLatestPoliticalOpenBet', async () => {
     // When
-    const [bet] = await GammaApiRepository.findLatestOpenBet(Limit(10), dayjs().add(20, 'day').toDate())
+    const bets = await GammaApiRepository.findLatestOpenBet(Limit(10), dayjs().add(10, 'day').toDate())
 
     // Then
-    expect(bet).toContainAllKeys([
+    expect(bets[0]).toContainAllKeys([
       'id',
       'title',
       'description',

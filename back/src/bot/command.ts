@@ -12,7 +12,7 @@ import { Wallet } from '../wallet/query'
 export namespace Bot {
   const INITIAL_DEPOSIT = Amount(1000)
 
-  export const runWithFavoriteStrategy = async (bettorId: BettorId, walletId: WalletId, limit = Limit(300)) => {
+  export const runWithFavoriteStrategy = async (bettorId: BettorId, walletId: WalletId, limit = Limit(100)) => {
     const placedBetIds = await BettorQuery.getCurrentPlacedBets(bettorId)()
     const bets = await Market.getLatestOpenBets(placedBetIds, limit)
     for (const { id, title, endAt, yes, no } of bets) {
