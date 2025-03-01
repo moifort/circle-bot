@@ -59,6 +59,7 @@ describe('decideJump', () => {
     expect(decision.getOrThrow()).toEqual({
       outcome: BetOutcome('yes'),
       amountToBet: Amount(100),
+      price: PolymarketPrice(0.56),
     })
   })
 
@@ -74,6 +75,7 @@ describe('decideJump', () => {
     expect(decision.getOrThrow()).toEqual({
       outcome: BetOutcome('no'),
       amountToBet: Amount(100),
+      price: PolymarketPrice(0.5509999999999999),
     })
   })
 

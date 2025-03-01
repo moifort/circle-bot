@@ -51,14 +51,13 @@ export namespace Bot {
       if (evaluation.error === 'funds-too-low') return Result.error(evaluation.error)
       if (evaluation.error === 'unprofitable-bet') continue
       if (evaluation.error === 'insufficient-history') continue
-      const { outcome, amountToBet } = evaluation.getOrThrow()
+      const { outcome, amountToBet, price } = evaluation.getOrThrow()
       const { error } = await Wallet.withdraw(walletId)(
         amountToBet,
         TransactionDescription({ betId: id, betTitle: title }),
       )
       if (error === 'insufficient-funds') return Result.error(evaluation.error)
-      const { yes, no } = await Market.getOpenBet(id) // Get the most updated price
-      await BettorCommand.placeBet(bettorId)(id, title, endAt, outcome, outcome === 'yes' ? yes : no, amountToBet)
+      await BettorCommand.placeBet(bettorId)(id, title, endAt, outcome, price, amountToBet)
     }
     await BettorCommand.updateAllPendingBet(bettorId)()
     const redeemedAmount = await BettorCommand.redeemAllWonBets(bettorId)()
