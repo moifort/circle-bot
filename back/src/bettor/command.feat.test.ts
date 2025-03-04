@@ -1,6 +1,6 @@
 import { describe, expect, it, spyOn } from 'bun:test'
 import { $firestore } from '../index'
-import { BetId, BetOutcome, BetTitle } from '../market/index.validator'
+import { BetId, BetOutcome, BetTitle, MarketId } from '../market/index.validator'
 import { PolymarketPrice } from '../market/infra/repository.validator'
 import { Market } from '../market/query'
 import { Amount } from '../utils/index.validator'
@@ -19,6 +19,7 @@ describe('Bettor', () => {
         status: 'closed',
         endAt: new Date(),
         winningOutcome: BetOutcome('yes'),
+        marketId: MarketId('44415361388259670318194555946269804118545473294573124528197499681209133814811'),
       }),
     )
     await PlacedBetRepository.save($firestore)({

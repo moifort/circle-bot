@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import { Result } from 'typescript-result'
 import { BettorCommand } from '../bettor/command'
 import type { BettorId } from '../bettor/index.type'
@@ -44,9 +45,14 @@ export namespace Bot {
 
   export const runWithJumpStrategy = async (bettorId: BettorId, walletId: WalletId, limit = Limit(180)) => {
     const placedBetIds = await BettorQuery.getCurrentPlacedBets(bettorId)()
-    const bets = await Market.getOpenBetsWithPriceHistory(placedBetIds, limit)
-    for (const { id, title, endAt, priceHistory } of bets) {
+    const bets = await Market.getLatestOpenBets(placedBetIds, limit)
+    for (const { id, title, endAt, marketId } of bets) {
       const bankroll = await BettorQuery.getBankroll(bettorId)(INITIAL_DEPOSIT)
+      const priceHistory = await Market.getPriceHistory(
+        marketId,
+        dayjs().subtract(4, 'minutes').toDate(),
+        dayjs().toDate(),
+      )
       const evaluation = Evaluator.evaluateWithJumpStrategy(priceHistory, bankroll)
       if (evaluation.error === 'funds-too-low') return Result.error(evaluation.error)
       if (evaluation.error === 'unprofitable-bet') continue

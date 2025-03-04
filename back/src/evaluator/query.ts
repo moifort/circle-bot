@@ -10,7 +10,7 @@ import { decideFavorite, decideJump } from './business-rules'
 export namespace Evaluator {
   const MINIMUM_BANKROLL = Amount(10)
   const PRICE_JUMP_THRESHOLD_POINTS = PercentagePoint(0.05) // 5 points jump (e.g., from 0.50 to 0.55)
-  const MAX_BANKROLL_AMOUNT_TO_BET = Percentage(0.06)
+  const MAX_BANKROLL_AMOUNT_TO_BET = Percentage(0.1)
   const HISTORY_WINDOW = Minute(4)
 
   export const evaluateWithFavoriteStrategy = (yes: PolymarketPrice, no: PolymarketPrice, bankroll: AmountType) => {
@@ -37,6 +37,6 @@ export namespace Evaluator {
       .sortBy(({ date }) => date)
       .value()
     if (recentHistory.length < 2) return Result.error('insufficient-history' as const)
-    return decideJump(MAX_BANKROLL_AMOUNT_TO_BET, PRICE_JUMP_THRESHOLD_POINTS)(last5MinutesPriceHistory, bankroll)
+    return decideJump(MAX_BANKROLL_AMOUNT_TO_BET, PRICE_JUMP_THRESHOLD_POINTS)(recentHistory, bankroll)
   }
 }
