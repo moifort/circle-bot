@@ -9,13 +9,15 @@ import { PolymarketPrice } from './repository.validator'
 export namespace GammaApiRepository {
   export const findBy = async (id: BedIdType) => {
     const response = await fetch(`https://gamma-api.polymarket.com/markets/slug/${id}`)
-    const { closed, slug, endDate, outcomePrices, question, description, updatedAt } =
+    const { closed, slug, endDate, outcomePrices, question, description, updatedAt, clobTokenIds } =
       (await response.json()) as PolymarketMarket
     return closed
       ? <ClosedBet>{
           id: BetId(slug),
           status: 'closed',
           endAt: new Date(endDate),
+          marketId: MarketId(JSON.parse(clobTokenIds)[0]),
+
           winningOutcome: BetOutcome(JSON.parse(outcomePrices)[0] === '1' ? 'yes' : 'no'),
         }
       : <OpenBet>{
@@ -25,6 +27,8 @@ export namespace GammaApiRepository {
           description: BetDescription(description),
           endAt: new Date(endDate),
           updatedAt: new Date(updatedAt),
+          marketId: MarketId(JSON.parse(clobTokenIds)[0]),
+
           yes: PolymarketPrice(Number.parseFloat(JSON.parse(outcomePrices)[0])),
           no: PolymarketPrice(Number.parseFloat(JSON.parse(outcomePrices)[1])),
         }
@@ -58,7 +62,10 @@ export namespace GammaApiRepository {
       )
       const { history } = (await response.json()) as PolymarketPriceHistory
       return chain(history)
-        .map<PriceHistory>(({ t, p }) => ({ date: dayjs.unix(t).toDate(), price: PolymarketPrice(p) }))
+        .map<PriceHistory>(({ t, p }) => ({
+          date: dayjs.unix(t).toDate(),
+          price: PolymarketPrice(p),
+        }))
         .value()
     } catch (e) {
       console.error('Ban from API')

@@ -6,5 +6,8 @@
     "postinstall": "if [[ -z \"$CI\" || -n \"$FIREBASE_TOOLS\" ]]; then bun install --global firebase-tools@13.32.0; fi && bun install --cwd back && bun install --cwd front",
     "dev": "firebase emulators:exec --import .emulators --ui --only functions,firestore 'bun --cwd back tsc --watch & bun --cwd front dev'",
     "firestore:save": "firebase emulators:export --force .emulators"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4"
   }
 }

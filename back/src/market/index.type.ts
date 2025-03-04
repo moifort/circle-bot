@@ -12,6 +12,7 @@ export type ClosedBet = {
   status: 'closed'
   endAt: Date
   winningOutcome: BetOutcome
+  marketId: MarketId
 }
 
 export type OpenBet = {
@@ -26,4 +27,6 @@ export type OpenBet = {
   marketId: MarketId
 }
 
-export type OpenBetWithPriceHistory = OpenBet & { priceHistory: PriceHistory[] }
+export type OpenBetWithPriceHistory = OpenBet & {
+  priceHistory: PriceHistory[]
+}

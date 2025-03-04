@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'bun:test'
+import dayjs from 'dayjs'
 import { Limit } from '../utils/index.validator'
-import { BetId, BetOutcome } from './index.validator'
+import { BetId, BetOutcome, MarketId } from './index.validator'
 import { Market } from './query'
 
 describe('Market', () => {
@@ -22,6 +23,7 @@ describe('Market', () => {
       id: BetId('will-twitter-announce-bankruptcy-in-2023'),
       status: 'closed',
       winningOutcome: BetOutcome('no'),
+      marketId: MarketId('44415361388259670318194555946269804118545473294573124528197499681209133814811'),
     })
   })
 
@@ -35,32 +37,21 @@ describe('Market', () => {
       id: BetId('will-twitter-announce-bankruptcy-in-2023'),
       status: 'closed',
       winningOutcome: BetOutcome('no'),
+      marketId: MarketId('44415361388259670318194555946269804118545473294573124528197499681209133814811'),
     })
   })
 
-  it('getOpenBetsWithPriceHistory', async () => {
+  it('getPriceHistory', async () => {
     // When
-    const bets = await Market.getOpenBetsWithPriceHistory(
-      [BetId('will-twitter-announce-bankruptcy-in-2023')],
-      Limit(15),
+    const priceHistory = await Market.getPriceHistory(
+      MarketId('44415361388259670318194555946269804118545473294573124528197499681209133814811'),
+      dayjs('2023-12-31T00:00:00.000Z').subtract(4, 'minutes').toDate(),
+      dayjs('2023-12-31T00:00:00.000Z').toDate(),
     )
 
     // Then
-    expect(bets).toBeArray()
-    expect(bets[0]).toContainAllKeys([
-      'id',
-      'status',
-      'title',
-      'description',
-      'endAt',
-      'updatedAt',
-      'yes',
-      'no',
-      'marketId',
-      'priceHistory',
-    ])
-    expect(bets[0].priceHistory).toBeArray()
-    expect(bets[0].priceHistory[0]).toEqual({
+    expect(priceHistory).toBeArray()
+    expect(priceHistory[0]).toEqual({
       date: expect.any(Date),
       price: expect.any(Number),
     })
