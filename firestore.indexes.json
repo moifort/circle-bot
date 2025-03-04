@@ -9,7 +9,39 @@
           "order": "ASCENDING"
         },
         {
+          "fieldPath": "bettorId",
+          "order": "ASCENDING"
+        },
+        {
           "fieldPath": "betEndAt",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "bettor-placed-bets",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "bettorId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "betEndAt",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "wallet-transactions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "walletId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
           "order": "ASCENDING"
         }
       ]
