@@ -18,6 +18,8 @@ export namespace Bot {
     await BettorCommand.updateAllPendingBet(bettorId)()
     const redeemedAmount = await BettorCommand.redeemAllWonBets(bettorId)()
     if (redeemedAmount > 0) await Wallet.deposit(walletId)(redeemedAmount, TransactionDescription('redeem'))
+    if ((await Wallet.balance(walletId)()) < INITIAL_DEPOSIT * Evaluator.MAX_BANKROLL_AMOUNT_TO_BET)
+      return Result.error('balance-too-low')
 
     // Placing bet
     const placedBetIds = await BettorQuery.getCurrentPlacedBets(bettorId)()
@@ -51,6 +53,8 @@ export namespace Bot {
     await BettorCommand.updateAllPendingBet(bettorId)()
     const redeemedAmount = await BettorCommand.redeemAllWonBets(bettorId)()
     if (redeemedAmount > 0) await Wallet.deposit(walletId)(redeemedAmount, TransactionDescription('redeem'))
+    if ((await Wallet.balance(walletId)()) < INITIAL_DEPOSIT * Evaluator.MAX_BANKROLL_AMOUNT_TO_BET)
+      return Result.error('balance-too-low')
 
     // Placing bet
     const placedBetIds = await BettorQuery.getCurrentPlacedBets(bettorId)()
