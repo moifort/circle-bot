@@ -1,4 +1,7 @@
-import { GraphQLResolveInfo } from 'graphql';
+/* eslint-disable */
+// @ts-nocheck
+import type { GraphQLResolveInfo } from 'graphql';
+import type { GraphQlContext } from '../index.type';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -13,6 +16,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  _FieldSet: { input: any; output: any; }
 };
 
 export type Book = {
@@ -28,7 +32,7 @@ export type Query = {
 
 
 
-export type ResolverTypeWrapper<T> = Promise<T> | T;
+export type ResolverTypeWrapper<T> = PartialDeep<T> | Promise<PartialDeep<T>>;
 
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
@@ -98,30 +102,30 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Book: ResolverTypeWrapper<Book>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
-  Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Query: ResolverTypeWrapper<{}>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Book: Book;
-  Boolean: Scalars['Boolean']['output'];
-  Query: {};
   String: Scalars['String']['output'];
+  Query: {};
+  Boolean: Scalars['Boolean']['output'];
 };
 
-export type BookResolvers<ContextType = any, ParentType extends ResolversParentTypes['Book'] = ResolversParentTypes['Book']> = {
+export type BookResolvers<ContextType = GraphQlContext, ParentType extends ResolversParentTypes['Book'] = ResolversParentTypes['Book']> = {
   author?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+export type QueryResolvers<ContextType = GraphQlContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   books?: Resolver<Array<ResolversTypes['Book']>, ParentType, ContextType>;
 };
 
-export type Resolvers<ContextType = any> = {
+export type Resolvers<ContextType = GraphQlContext> = {
   Book?: BookResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
 };
