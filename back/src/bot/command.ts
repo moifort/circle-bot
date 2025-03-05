@@ -14,6 +14,12 @@ export namespace Bot {
   const INITIAL_DEPOSIT = Amount(1000)
 
   export const runWithFavoriteStrategy = async (bettorId: BettorId, walletId: WalletId, limit = Limit(100)) => {
+    // Refresh bet state
+    await BettorCommand.updateAllPendingBet(bettorId)()
+    const redeemedAmount = await BettorCommand.redeemAllWonBets(bettorId)()
+    if (redeemedAmount > 0) await Wallet.deposit(walletId)(redeemedAmount, TransactionDescription('redeem'))
+
+    // Placing bet
     const placedBetIds = await BettorQuery.getCurrentPlacedBets(bettorId)()
     const bets = await Market.getLatestOpenBets(placedBetIds, limit)
     for (const { id, title, endAt, yes, no } of bets) {
@@ -37,13 +43,16 @@ export namespace Bot {
         amountToBet,
       )
     }
-    await BettorCommand.updateAllPendingBet(bettorId)()
-    const redeemedAmount = await BettorCommand.redeemAllWonBets(bettorId)()
-    if (redeemedAmount > 0) await Wallet.deposit(walletId)(redeemedAmount, TransactionDescription('redeem'))
     return Result.ok()
   }
 
   export const runWithJumpStrategy = async (bettorId: BettorId, walletId: WalletId, limit = Limit(180)) => {
+    // Update state
+    await BettorCommand.updateAllPendingBet(bettorId)()
+    const redeemedAmount = await BettorCommand.redeemAllWonBets(bettorId)()
+    if (redeemedAmount > 0) await Wallet.deposit(walletId)(redeemedAmount, TransactionDescription('redeem'))
+
+    // Placing bet
     const placedBetIds = await BettorQuery.getCurrentPlacedBets(bettorId)()
     const bets = await Market.getLatestOpenBets(placedBetIds, limit)
     for (const { id, title, endAt, marketId } of bets) {
@@ -65,9 +74,6 @@ export namespace Bot {
       if (error === 'insufficient-funds') return Result.error(evaluation.error)
       await BettorCommand.placeBet(bettorId)(id, title, endAt, outcome, price, amountToBet)
     }
-    await BettorCommand.updateAllPendingBet(bettorId)()
-    const redeemedAmount = await BettorCommand.redeemAllWonBets(bettorId)()
-    if (redeemedAmount > 0) await Wallet.deposit(walletId)(redeemedAmount, TransactionDescription('redeem'))
     return Result.ok()
   }
 }
