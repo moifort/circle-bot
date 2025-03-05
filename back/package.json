@@ -7,13 +7,14 @@
     "check": "bun tsc",
     "build": "pnpm tsc",
     "clean": "bunx biome check --write",
-    "dev": "firebase emulators:exec --import .emulators --ui --only functions,firestore 'bun tsc --watch'",
+    "dev": "firebase emulators:exec --import .emulators --ui --only functions,firestore 'bun graphql:gen -w src/**/graphql/* & bun tsc --watch'",
     "test:all": "bun test:unit && bun test:int && bun test:feat",
     "test:unit": "bun test unit",
     "test:int": "bun test int",
     "test:feat": "firebase emulators:exec --only firestore 'bun test feat'",
     "kill": "lsof -t -i:3000 -i:8085 -i:8080 -i:4400 -i:4500 -i:9150 -i:9099 -i:5000 -i:5001 -i:4000 -i:9229 | xargs kill -9 ",
-    "firestore:save": "firebase emulators:export --force .emulators"
+    "firestore:save": "firebase emulators:export --force .emulators",
+    "graphql:gen": "graphql-codegen"
   },
   "engines": {
     "node": "22"
@@ -41,9 +42,15 @@
     "@biomejs/biome": "1.9.4",
     "@eslint/js": "9.21.0",
     "@firebase/rules-unit-testing": "4.0.1",
+    "@graphql-codegen/add": "5.0.2",
+    "@graphql-codegen/cli": "5.0.5",
+    "@graphql-codegen/typescript": "4.1.5",
+    "@graphql-codegen/typescript-resolvers": "4.4.4",
     "@types/bun": "1.2.4",
     "@types/lodash": "4.17.16",
     "firebase-functions-test": "3.4.0",
-    "typescript": "5.8.2"
+    "typescript": "5.8.2",
+    "@graphql-codegen/typescript-document-nodes": "4.0.15",
+    "@graphql-codegen/introspection": "4.0.3"
   }
 }

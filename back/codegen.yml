@@ -1,0 +1,41 @@
+overwrite: true
+schema: src/**/graphql/*
+generates:
+  src/api/__generated__/graphql.schema.json:
+    plugins:
+      - introspection
+  src/api/__generated__/type.ts:
+    plugins:
+      - typescript
+      - typescript-resolvers
+      - add:
+          content: '/* eslint-disable */'
+      - add:
+          content: '// @ts-nocheck'
+
+    config:
+      useTypeImports: true
+      enumsAsTypes: true
+      federation: true
+      contextType: '../index.type#GraphQlContext'
+      resolverTypeWrapperSignature: 'PartialDeep<T> | Promise<PartialDeep<T>>'
+#      enumValues:
+#        KpiId: '../../kpi/index.type#KpiId'
+#        Channel: '../../kpi/index.type#Channel'
+#        Period: '../../kpi/index.type#Period'
+#        Unit: '../../kpi/index.type#Unit'
+#        OrderBy: '../../kpi/index.type#OrderBy'
+#        CountryId: '../../country/index.type#CountryId'
+#        Currency: 'FiatCurrency'
+#      scalars:
+#        DepartmentId: '../../department/index.type#DepartmentId'
+#        ImageUrl: '../../model/index.type#ImageUrl'
+#        Rank: '../../model/index.type#Rank'
+#        Limit: 'number'
+#        ModelId: '../../model/index.type#ModelId'
+#        StoreId: '../../store/index.type#StoreId'
+#        CountryId: '../../country/index.type#CountryId'
+#        Currency: '@miaou/types#FiatCurrency'
+#        TeamId: '../../team/index.type#TeamId'
+#        Date: 'Date'
+#        RegionId: '../../region/index.type#RegionId'

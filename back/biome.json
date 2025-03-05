@@ -7,7 +7,7 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "ignore": ["lib", ".emulators"]
+    "ignore": ["lib", ".emulators", "src/api/__generated__"]
   },
   "formatter": {
     "enabled": true,
